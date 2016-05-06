@@ -4,31 +4,25 @@ kNN::kNN(const unsigned int k){
 	this->k = k;
 }
 
-kNN::kNN(const unsigned int k,const vector<Digito>& trainingSet){
+/*kNN::kNN(const unsigned int k,const vector<Digito>& trainingSet){
 	this->k = k;
 	//set = trainingSet;
 	Matriz X = Matriz(trainingSet);
 	matrizMuestra(X);
-}
-
+}*/
+/*
 void kNN::matrizMuestra(Matriz& X) const{
 	unsigned int n = X.Ancho();
 	double escalar = 1/(sqrt(n-1));
 	for(unsigned int i = 0; i < X.Alto(); i++){
-		double mu = media(X[i]);
+		double mu = X[i].Media();
+		//TODO:Resta de vector
+		for(unsigned int j = 0; j < X.Ancho(); j++){
+			X[i][j] -= mu;
+		}
 	}
-	X.Multiplicar(escalar);
-}
-
-//TODO: Cambiar por la media de vector
-double kNN::media(const vector<double>& v) const{
-	double suma = 0;
-	for(unsigned int i = 0; i < v.size(); i++){
-		suma += v[i];
-	}
-	return suma/v.size();
-}
-
+	X = X*escalar;
+}*/
 
 void kNN::Agregar(const Digito& dig){
 	set.push_back(dig);

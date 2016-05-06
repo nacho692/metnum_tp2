@@ -8,32 +8,21 @@ Digito::Digito(const Digito& otro){
 Digito::Digito(string clase, const vector<double>& vec){
 	this->vec = vec;
 	this->clase = clase;
-	this->dim = vec.size();
 }
 
 
 double Digito::Norma() const{
-	double sumCuadrados = 0;
-	for(unsigned int i = 0; i < vec.size(); i++){
-		sumCuadrados += (vec[i]*vec[i]);
-	}
-
-	return sqrt(sumCuadrados);
+	return vec.Norma();
 }
 double Digito::DistanciaCuad(const Digito& otro) const{
-	double sumCuadrados = 0;
-	for(unsigned int i = 0; i < this->Dimension(); i++){
-		double resta = otro[i] - (*this)[i];
-		sumCuadrados += resta*resta;
-	}
-	return sumCuadrados;
+	return vec.DistanciaCuad(otro.vec);
 }
 
 unsigned int Digito::Dimension() const{
-	return this->dim;
+	return vec.Dimension();
 }
 
-string Digito::Clase() const{
+const string& Digito::Clase() const{
 	return this->clase;
 }
 
@@ -47,8 +36,7 @@ const double& Digito::operator[](unsigned int i) const{
 }
 
 Digito& Digito::operator=(const Digito& otro){
-	vec = vector<double>(otro.vec);
-	dim = otro.dim;
+	vec = Vector(otro.vec);
 	clase = otro.clase;
 	return *this;
 }

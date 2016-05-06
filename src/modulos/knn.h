@@ -2,7 +2,7 @@
 #define KNN_H_
 
 #include "digito.h"
-#include "matriz.h"
+#include "../utils/matriz.h"
 #include <algorithm>
 #include <vector>
 
@@ -11,8 +11,7 @@ class kNN{
 	private:
 		unsigned int k;
 		vector<Digito> set;
-		void matrizMuestra(Matriz& set) const;
-		double media(const vector<double>& v) const;
+		//void matrizMuestra(Matriz& set) const;
 
 		struct Vecino{
 			double distancia;
