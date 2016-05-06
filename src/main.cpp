@@ -1,24 +1,25 @@
 #include <iostream>
 #include <vector>
-#include "utils/digito.h"
-#include "utils/knn.h"
+#include "modulos/digito.h"
+#include "modulos/knn.h"
+#include "utils/vector.h"
 
 using namespace std;
 
 
 int main(){
-	vector<double> v1;
-	v1.push_back(1);
-	v1.push_back(1);
-	vector<double> v2;
-	v2.push_back(2);
-	v2.push_back(1);
-	vector<double> v3;
-	v3.push_back(3);
-	v3.push_back(1);
-	vector<double> v4;
-	v4.push_back(4);
-	v4.push_back(1);
+	Vector v1;
+	v1.Agregar(1);
+	v1.Agregar(1);
+	Vector v2;
+	v2.Agregar(2);
+	v2.Agregar(1);
+	Vector v3;
+	v3.Agregar(3);
+	v3.Agregar(1);
+	Vector v4;
+	v4.Agregar(4);
+	v4.Agregar(1);
 
 	vector<Digito> d;
 	d.push_back(Digito("uno",v1));
@@ -27,9 +28,9 @@ int main(){
 	d.push_back(Digito("cuatro",v4));
 	kNN k = kNN(3,d);
 
-	vector<double> v5;
-	v5.push_back(3);
-	v5.push_back(4);
+	Vector v5;
+	v5.Agregar(3);
+	v5.Agregar(4);
 
 	Digito punto = Digito("",v5);
 	cout << k.Identificar(punto) << endl;

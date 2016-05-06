@@ -13,7 +13,7 @@ class Digito{
 		string clase;
 
 	public:
-		Digito(string clase, const vector<double>& vec);
+		Digito(string clase, const Vector& vec);
 		Digito(const Digito& otro);
 		unsigned int Dimension() const;
 		double Norma() const;

@@ -5,7 +5,7 @@ Digito::Digito(const Digito& otro){
 }
 
 
-Digito::Digito(string clase, const vector<double>& vec){
+Digito::Digito(string clase, const Vector& vec){
 	this->vec = vec;
 	this->clase = clase;
 }

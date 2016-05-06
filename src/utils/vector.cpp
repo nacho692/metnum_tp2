@@ -44,7 +44,7 @@ double Vector::Norma() const{
 	return sqrt(sumCuadrados);
 }
 
-double Vector::DistanciaCuad(const Vector& v2){
+double Vector::DistanciaCuad(const Vector& v2) const{
 	double sumCuadrados = 0;
 	for(unsigned int i = 0; i < this->Dimension(); i++){
 		double resta = v2[i] - (*this)[i];

@@ -1,0 +1,12 @@
+src/utils/vector.o
+src/.deps
+src/main.o
+src/modulos/digito.o
+src/modulos/knn.o
+src/modulos/pca.o
+src/modulos/pls_da.o
+src/tp
+src/scripts/__init__.pyc
+src/scripts/fabricate.pyc
+src/scripts/settings.pyc
+src/scripts/utils.pyc

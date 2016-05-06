@@ -4,12 +4,12 @@ kNN::kNN(const unsigned int k){
 	this->k = k;
 }
 
-/*kNN::kNN(const unsigned int k,const vector<Digito>& trainingSet){
+kNN::kNN(const unsigned int k,const vector<Digito>& trainingSet){
 	this->k = k;
-	//set = trainingSet;
-	Matriz X = Matriz(trainingSet);
-	matrizMuestra(X);
-}*/
+	set = trainingSet;
+	//Matriz X = Matriz(trainingSet);
+	//matrizMuestra(X);
+}
 /*
 void kNN::matrizMuestra(Matriz& X) const{
 	unsigned int n = X.Ancho();

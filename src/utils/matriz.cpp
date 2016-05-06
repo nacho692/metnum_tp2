@@ -15,9 +15,9 @@ Matriz::Matriz(unsigned int ancho, unsigned int alto){
 
 Matriz::Matriz(const vector<Digito>& set){
 	for(unsigned int i = 0; i < set.size(); i++){
-		vector<double> f;
+		Vector f;
 		for(unsigned int j = 0; j < set[i].Dimension(); j++){
-			f.push_back(set[i][j]);
+			f.Agregar(set[i][j]);
 		}
 		m.push_back(f);
 	}

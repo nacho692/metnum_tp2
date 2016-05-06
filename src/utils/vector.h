@@ -1,5 +1,5 @@
-#ifndef VECdoubleOR_H_
-#define VECdoubleOR_H_
+#ifndef VECTOR_H_
+#define VECTOR_H_
 
 #include <vector>
 #include <cmath>
@@ -20,14 +20,12 @@ class Vector{
 		double SumaTotal() const;
 		double Media() const;
 		double Norma() const;
-		double DistanciaCuad(const Vector& v2);
+		double DistanciaCuad(const Vector& v2) const;
 		Vector operator+(const Vector& v2) const;
 		double operator*(const Vector& v2) const;//Asumo que el vector 
 		Vector& operator=(const Vector& v2);
 		const double& operator[](unsigned int i) const;
 		double& operator[](unsigned int i);
 };
-
-
 
 #endif
