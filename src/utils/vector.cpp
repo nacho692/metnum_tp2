@@ -8,6 +8,9 @@ Vector::Vector(unsigned int n){
 	v = vector<double>(n);
 }
 
+Vector::Vector(const Vector& v2){
+	*this = v2;
+}
 
 unsigned int Vector::Dimension() const{
 	return v.size();
@@ -32,6 +35,33 @@ double Vector::Media() const{
 	return this->SumaTotal()/this->Dimension();
 }
 
+double Vector::Norma() const{
+	double sumCuadrados = 0;
+	for(unsigned int i = 0; i < v.size(); i++){
+		sumCuadrados += ((*this)[i]*(*this)[i]);
+	}
+
+	return sqrt(sumCuadrados);
+}
+
+double Vector::DistanciaCuad(const Vector& v2){
+	double sumCuadrados = 0;
+	for(unsigned int i = 0; i < this->Dimension(); i++){
+		double resta = v2[i] - (*this)[i];
+		sumCuadrados += resta*resta;
+	}
+	return sumCuadrados;
+}
+
+
+Vector Vector::operator+(const Vector& v2) const{
+	Vector ret;
+	ret = Vector(this->Dimension());
+	for(unsigned int i = 0; i < this->Dimension() ; i++){
+		ret[i] = (*this)[i]+v2[i];	
+	}	
+	return ret;
+}
 
 double Vector::operator*(const Vector& v2) const{
 	double t = 0;
@@ -43,6 +73,10 @@ double Vector::operator*(const Vector& v2) const{
 	return t;
 }
 
+Vector& Vector::operator=(const Vector& v2){
+	v = v2.v;
+	return *this;
+}
 
 const double& Vector::operator[](unsigned int i) const{
 	return v[i];
