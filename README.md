@@ -1,0 +1,2 @@
+# metnum_tp2
+RECONOCIMIENTO DE DIGITOS
