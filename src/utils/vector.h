@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cmath>
+#include <iostream>
 
 using namespace std;
 
@@ -22,10 +23,15 @@ class Vector{
 		double Norma() const;
 		double Distancia(const Vector& v2) const;
 		Vector operator+(const Vector& v2) const;
-		double operator*(const Vector& v2) const;//Asumo que el vector 
+		double operator*(const Vector& v2) const;
+		Vector operator*(const double& d) const;
 		Vector& operator=(const Vector& v2);
 		const double& operator[](unsigned int i) const;
 		double& operator[](unsigned int i);
+
+		friend ostream& operator<<(ostream& os, const Vector& vec);
 };
+
+Vector operator*(double d, const Vector& A);
 
 #endif

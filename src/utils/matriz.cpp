@@ -90,14 +90,15 @@ void Matriz::Transponer(){
 	(*this) = B;
 }
 
-double Matriz::MetodoPotencia(Vector& x, unsigned int nit) const{
-	Vector v = x;
+double Matriz::MetodoPotencia(Vector& x, unsigned int nit,Vector& v) const{
+	v = x;
 	double a;
-	//Matriz B = Matriz(*this);
+	Matriz B = Matriz(*this);
 	for (unsigned int i = 1 ; i <= nit ; i++ ){
-		v = ((*this)*v)*(1/(((*this)*v).Norma()));
+		v = (B*v)*(1/((B*v).Norma()));
 	}
-	a = (v*((*this)*v)) / (v*v);
+	x = v;
+	a = (v*(B*v)) / (v*v);
 	return a;
 }
 
@@ -110,4 +111,23 @@ Vector& Matriz::operator[](unsigned int i){
 
 const Vector& Matriz::operator[](unsigned int i) const{
 	return m[i];
+}
+
+Matriz& Matriz::operator=(const Matriz& B){
+	m = B.m;
+	ancho = B.ancho;
+	alto = B.alto;
+	return *this;
+}
+
+ostream& operator<<(ostream& os, const Matriz& B){
+	os << endl;
+	if( B.Alto() == 0 || B.Ancho() == 0 ){
+		os << "[ ]";
+	}else{
+		for( unsigned int i = 0 ; i < B.Alto() ; i++){
+		os << B[i] << endl;
+		}
+	}
+	return os;
 }

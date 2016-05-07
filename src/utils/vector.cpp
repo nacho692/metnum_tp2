@@ -1,5 +1,9 @@
 #include "vector.h"
 
+Vector operator*(double d, const Vector& A){
+	return A*d;
+}
+
 Vector::Vector(){
 }
 
@@ -71,6 +75,14 @@ double Vector::operator*(const Vector& v2) const{
 	return t;
 }
 
+Vector Vector::operator*(const double& d) const{
+	Vector v1 = Vector(this->Dimension());
+	for (unsigned int i = 0; i < this->Dimension() ; i++ ){
+		v1[i] = (*this)[i]*d;
+	}
+	return v1;
+}
+
 Vector& Vector::operator=(const Vector& v2){
 	v = v2.v;
 	return *this;
@@ -83,4 +95,16 @@ const double& Vector::operator[](unsigned int i) const{
 
 double& Vector::operator[](unsigned int i){
 	return v[i];
+}
+
+ostream& operator<<(ostream& os, const Vector& vec){
+	os << "[ ";
+	if(vec.Dimension() != 0 ){
+	    for( unsigned int i = 0 ; i < vec.Dimension()-1 ; i++){
+	    	os << vec[i] << ", ";
+	    }
+	    os << vec[vec.Dimension()-1];
+	}
+	os << ']';
+    return os;
 }
