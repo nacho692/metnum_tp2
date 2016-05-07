@@ -90,12 +90,12 @@ void Matriz::Transponer(){
 	(*this) = B;
 }
 
-double MetodoPotencia(Vector& x, unsigned int nit) const{
+double Matriz::MetodoPotencia(Vector& x, unsigned int nit) const{
 	Vector v = x;
 	double a;
 	//Matriz B = Matriz(*this);
 	for (unsigned int i = 1 ; i <= nit ; i++ ){
-		v = ((*this)*v) / (((*this)*v).Norma());
+		v = ((*this)*v)*(1/(((*this)*v).Norma()));
 	}
 	a = (v*((*this)*v)) / (v*v);
 	return a;
