@@ -44,13 +44,13 @@ double Vector::Norma() const{
 	return sqrt(sumCuadrados);
 }
 
-double Vector::DistanciaCuad(const Vector& v2) const{
+double Vector::Distancia(const Vector& v2) const{
 	double sumCuadrados = 0;
 	for(unsigned int i = 0; i < this->Dimension(); i++){
 		double resta = v2[i] - (*this)[i];
 		sumCuadrados += resta*resta;
 	}
-	return sumCuadrados;
+	return sqrt(sumCuadrados);
 }
 
 
@@ -66,9 +66,7 @@ Vector Vector::operator+(const Vector& v2) const{
 double Vector::operator*(const Vector& v2) const{
 	double t = 0;
 	for (unsigned int i = 0; i < this->Dimension() ; i++ ){
-		for (unsigned int j = 0; i < v2.Dimension() ; j++ ){
-			t = t + v[i]*v[j];
-		}
+		t = t + v[i]*v2[i];
 	}
 	return t;
 }

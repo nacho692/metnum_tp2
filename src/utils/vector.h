@@ -20,7 +20,7 @@ class Vector{
 		double SumaTotal() const;
 		double Media() const;
 		double Norma() const;
-		double DistanciaCuad(const Vector& v2) const;
+		double Distancia(const Vector& v2) const;
 		Vector operator+(const Vector& v2) const;
 		double operator*(const Vector& v2) const;//Asumo que el vector 
 		Vector& operator=(const Vector& v2);

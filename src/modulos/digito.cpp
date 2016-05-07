@@ -14,8 +14,8 @@ Digito::Digito(string clase, const Vector& vec){
 double Digito::Norma() const{
 	return vec.Norma();
 }
-double Digito::DistanciaCuad(const Digito& otro) const{
-	return vec.DistanciaCuad(otro.vec);
+double Digito::Distancia(const Digito& otro) const{
+	return vec.Distancia(otro.vec);
 }
 
 unsigned int Digito::Dimension() const{

@@ -70,6 +70,16 @@ Matriz Matriz::operator*(const Matriz& B) const{
 	return A;
 }
 
+//Multiplica un B*v
+Vector Matriz::operator*(const Vector& v) const{
+	unsigned int min;
+	Vector v2 = Vector((*this)[0].Dimension());
+	for ( unsigned int i = 0 ; i < this->Alto() ; i++ ){
+		v2[i] = (*this)[i]*v;
+	}
+	return v2;
+}
+
 void Matriz::Transponer(){
 	Matriz B(alto,ancho);
 	for(unsigned int i = 0; i < this->Alto(); i++){
@@ -79,6 +89,18 @@ void Matriz::Transponer(){
 	}
 	(*this) = B;
 }
+
+double MetodoPotencia(Vector& x, unsigned int nit) const{
+	Vector v = x;
+	double a;
+	//Matriz B = Matriz(*this);
+	for (unsigned int i = 1 ; i <= nit ; i++ ){
+		v = ((*this)*v) / (((*this)*v).Norma());
+	}
+	a = (v*((*this)*v)) / (v*v);
+	return a;
+}
+
 
 
 

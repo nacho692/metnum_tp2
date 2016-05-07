@@ -22,7 +22,7 @@ class Digito{
 		void Sumar(double s);
 		void Escalar(double c);
 
-		double DistanciaCuad(const Digito& otro) const;
+		double Distancia(const Digito& otro) const;
 		const string& Clase() const;
 
 		double& operator[](unsigned int i);

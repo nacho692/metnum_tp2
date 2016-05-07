@@ -33,7 +33,7 @@ string kNN::Identificar(const Digito& dig) const{
 	vector<Vecino> distancias;
 	for(unsigned int i = 0; i < set.size(); i++){
 		Vecino d;
-		d.distancia = dig.DistanciaCuad(set[i]);
+		d.distancia = dig.Distancia(set[i]);
 		d.clase = set[i].Clase();
 		distancias.push_back(d);
 	}
