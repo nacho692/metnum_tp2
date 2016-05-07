@@ -5,6 +5,7 @@
 #include "../utils/matriz.h"
 #include <algorithm>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 class kNN{
@@ -17,9 +18,15 @@ class kNN{
 			double distancia;
 			string clase;
 		};
-		static bool cmpVecino(const Vecino& v1,const Vecino& v2){
+
+
+		static bool cmpVecinoDistancia(const Vecino& v1,const Vecino& v2){
 			return v1.distancia > v2.distancia;
 		}
+		static bool cmpVecinoClase(const Vecino& v1,const Vecino& v2){
+			return v1.clase > v2.clase;
+		}
+
 
 	public:
 		kNN(const unsigned int k);
