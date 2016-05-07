@@ -3,6 +3,7 @@
 #include "modulos/digito.h"
 #include "modulos/knn.h"
 #include "utils/vector.h"
+#include "modulos/levanta_datos.h"
 
 using namespace std;
 
@@ -34,5 +35,9 @@ int main(){
 
 	Digito punto = Digito("",v5);
 	cout << k.Identificar(punto) << endl;
+
+	LevantaDatos lev = LevantaDatos();
+
+
 	return 0;
 }

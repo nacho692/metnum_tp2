@@ -5,8 +5,13 @@ src/modulos/digito.o
 src/modulos/knn.o
 src/modulos/pca.o
 src/modulos/pls_da.o
+src/modulos/levanta_datos.o
 src/tp
 src/scripts/__init__.pyc
 src/scripts/fabricate.pyc
 src/scripts/settings.pyc
 src/scripts/utils.pyc
+modulos/levanta_datos.o
+data/test.csv
+data/train.csv
+src/data/
