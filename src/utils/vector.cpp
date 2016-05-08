@@ -16,7 +16,6 @@ Vector::Vector(const Vector& v2){
 	*this = v2;
 }
 
-
 void Vector::RandomVector(){
   	srand (time(NULL));
 	for(int i = 0; i < this->Dimension(); i++){
