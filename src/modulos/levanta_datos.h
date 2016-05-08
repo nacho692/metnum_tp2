@@ -21,13 +21,13 @@ class LevantaDatos{
 
 		vector< vector< unsigned int > > folds; // vector de 1 y 0 que me dice si el i-esimo valor es de training (1) o si es de testing (1) para el j-esimo fold
 		Matriz digitos;
-		vector<string> labels;
+		vector<int> labels;
 
 		Matriz digitos_testing;
-		vector<string> labels_testing;
+		vector<int> labels_testing;
 
 		Matriz digitos_training;
-		vector<string> labels_training;
+		vector<int> labels_training;
 
 	public:
 		LevantaDatos();
@@ -40,10 +40,10 @@ class LevantaDatos{
 		unsigned int CantidadFolds() const;
 
 		const Matriz& MatrizTraining() const;
-		const vector<string>& LabelsTraining() const;
+		const vector<int>& LabelsTraining() const;
 
 		const Matriz& MatrizTesting() const;
-		const vector<string>& LabelsTesting() const;
+		const vector<int>& LabelsTesting() const;
 };
 
 #endif

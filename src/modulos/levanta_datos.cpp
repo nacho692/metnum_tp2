@@ -73,7 +73,7 @@ LevantaDatos::LevantaDatos(){
 			unsigned int j = 0;
 			getline(data_line, pixel, ',');
 
-			this->labels.push_back(pixel);
+			this->labels.push_back( stoi(pixel) );
 
 			while ( getline(data_line, pixel, ',') ){
 				this->digitos[i][j] = (double) stoi(pixel);
@@ -96,12 +96,14 @@ void LevantaDatos::SetearKesimoFold(unsigned int k){
 	unsigned int indice_training = 0;
 	for (unsigned int i = 0; i < this->digitos.Alto(); i++){
 		unsigned int j;
-		if (fold[i]){
+		if (fold[i]){ // Si es para training
+			this->labels_training[indice_training] = this->labels[i];
 			for (j = 0; j < 784; j++){
 				this->digitos_training[indice_training][j] = this->digitos[i][j];
 			}
 			indice_training++;
 		} else {
+			this->labels_testing[indice_testing] = this->labels[i]
 			for (j = 0; j < 784; j++){
 				this->digitos_testing[indice_testing][j] = this->digitos[i][j];
 			}
@@ -130,12 +132,12 @@ unsigned int LevantaDatos::CantidadFolds() const{
 const Matriz& LevantaDatos::MatrizTraining() const{
 	return this->digitos_training;
 }
-const vector<string>& LevantaDatos::LabelsTraining() const{
+const vector<int>& LevantaDatos::LabelsTraining() const{
 	return this->labels_training;
 }
 const Matriz& LevantaDatos::MatrizTesting() const{
 	return this->digitos_testing;
 }
-const vector<string>& LevantaDatos::LabelsTesting() const{
+const vector<int>& LevantaDatos::LabelsTesting() const{
 	return this->labels_testing;
 }
