@@ -17,7 +17,7 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma){
 	Yt = Y;
 	Yt.Transponer();
 
-	Matriz XC = X;
+	Matriz XC = Xt;
 	Vt = Matriz(set.Ancho(),gamma);
 	for(unsigned int i = 0; i < gamma; i++){
 		Matriz M = Xt*Y*Yt*X;
