@@ -20,20 +20,24 @@ class LevantaDatos{
 		unsigned int cantidad_folds;
 
 		vector< vector< unsigned int > > folds; // vector de 1 y 0 que me dice si el i-esimo valor es de training (1) o si es de testing (1) para el j-esimo fold
-
 		Matriz digitos;
 		vector<string> labels;
 
+		Matriz digitos_testing;
+		vector<string> labels_testing;
+
+		Matriz digitos_training;
+		vector<string> labels_training;
 
 	public:
 		LevantaDatos();
+		void SetearKesimoFold(unsigned int k);
+
 		string FilePath() const;
 		unsigned int CantidadVecinos() const;
 		unsigned int Alpha() const;
 		unsigned int Gamma() const;
 		unsigned int CantidadFolds() const;
-
-
 };
 
 #endif

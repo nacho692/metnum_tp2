@@ -44,10 +44,19 @@ LevantaDatos::LevantaDatos(){
 		cout << "No se abre el input" << endl;
 	}
 
-	// Levantar d´igitos
-
+	// Setear los tamaños de matrices y vectores
 	this->digitos = Matriz(784, 42000);
 
+	unsigned int cantidad_testing = 42000/this->CantidadFolds();
+	unsigned int cantidad_training = 42000 - cantidad_testing;
+
+	digitos_testing = Matriz(784, cantidad_testing);
+	labels_testing.resize(cantidad_testing);
+
+	digitos_training = Matriz(784, cantidad_training);
+	labels_training.resize(cantidad_training);
+
+	// Levantar d´igitos
 
 	string linea;
 	ifstream data_file(this->FilePath());
@@ -79,6 +88,10 @@ LevantaDatos::LevantaDatos(){
 	} else {
 		cout << "No se abre la data" << endl;
 	}
+}
+
+void SetearKesimoFold(unsigned int k){
+
 }
 
 string LevantaDatos::FilePath() const{
