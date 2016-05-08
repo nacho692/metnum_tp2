@@ -1,18 +1,3 @@
-//Necesito incluir:
-//#include <stdio.h>      /* printf, scanf, puts, NULL */
-//#include <stdlib.h>     /* srand, rand */
-//#include <time.h>       /* time */
-
-
-Vector& RandomVector( int ancho ){
-	Vector v = new Vector(ancho);
-	for(int i = 0; i < v.Dimension(); i++){
-		// initialize random seed: 
-  		srand (time(NULL));
-		v[i] = srand();
-	}
-}
-
 /*
 Descripcion:
 	Calculamos el vector μ que contiene la media de cada de una las variables.
