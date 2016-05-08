@@ -90,8 +90,9 @@ LevantaDatos::LevantaDatos(){
 	}
 }
 
-void SetearKesimoFold(unsigned int k){
-
+void LevantaDatos::SetearKesimoFold(unsigned int k){
+	vector<unsigned int> fold = this->folds[k];
+	cout << fold[0] << " " << fold[1] << endl;
 }
 
 string LevantaDatos::FilePath() const{
