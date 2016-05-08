@@ -14,6 +14,7 @@ class Identificador{
 		
 		Matriz tSet;
 		vector<int> clases;
+		Vector medias;
 		//Matriz cambio de base
 		Matriz Vt;
 

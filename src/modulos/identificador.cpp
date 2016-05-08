@@ -5,22 +5,22 @@ void Identificador::PCA(const Matriz& set, unsigned int alpha){
 	CentrarDividir(set,X,Xt);
 	
 	Matriz mCovarianza = Xt*X;
-	Matriz mDiagonal = Matriz ( alpha, alpha);
 	Vector autovector = Vector(alpha);
 	Matriz mDeflacion;
+	double autovalor;
 	this->Vt = Matriz ( alpha, mCovarianza.Ancho());
 
 	for(int i = 0; i < alpha ; i++){
 		autovector.RandomVector();
-		mDiagonal[i][i] =  mCovarianza.MetodoPotenciaNIteraciones( autovector, 3);
+		autovalor =  mCovarianza.MetodoPotenciaNIteraciones( autovector, 3);
 		Vt[i] = autovector;
-		mDeflacion = Matriz( autovector, autovector) * mDiagonal[i][i];
+		mDeflacion = Matriz( autovector, autovector) * autovalor;
 		mCovarianza = mCovarianza - mDeflacion;
 	}
 
 	//Mi cambio de base Vt
 	//Actualizo el training set 
-	this->tSet = mDiagonal;
+	this->tSet = Vt*Xt;
 }
 
 void Identificador::PLS_DA(const Matriz& set, unsigned int gamma){
@@ -69,10 +69,12 @@ void Identificador::CentrarDividir(const Matriz& set, Matriz& X, Matriz& Xt) con
 	Xt = set;
 	Xt.Transponer();
 	double escalar = 1 / sqrt( set.Alto()-1 );
+	this->medias = Vector(Xt.Alto());
 
 	for(unsigned int i = 0; i < Xt.Alto(); i++){
 		//TODO: Vector + escalar
 		double media = Xt[i].Media();
+		medias[i] = media;
 		for(unsigned int j = 0; j < Xt.Ancho(); j++){
 			Xt[i][j] -= media;
 			Xt[i][j] *= escalar;
