@@ -17,6 +17,7 @@ class Matriz{
 		Matriz();
 		Matriz(unsigned int ancho, unsigned int alto);
 		Matriz(const Matriz& otra);
+		Matriz(const Vector& v1, const Vector& v2);
 		//Matriz(const vector<Digito>& set);
 		unsigned int Ancho() const;
 		unsigned int Alto() const;
@@ -30,12 +31,12 @@ class Matriz{
 		Matriz operator* (const double& b) const;
 		Vector operator* (const Vector& v) const;
 		Matriz operator+(const Matriz& B) const;
+
 		Matriz& operator=(const Matriz& B);
 
 		friend ostream& operator<<(ostream& os, const Matriz& B);
 };
 
 Matriz operator*(double b, const Matriz& B);
-
 
 #endif

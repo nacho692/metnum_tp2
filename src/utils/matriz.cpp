@@ -9,6 +9,16 @@ Matriz operator*(double b, const Matriz& B){
 Matriz::Matriz(){
 	
 }
+Matriz::Matriz(const Vector& v1, const Vector& v2){
+	Vector v = Vector(v2.Dimension());
+	m = vector< Vector >(v1.Dimension(), v);
+
+	for(unsigned int i = 0; i < v2.Dimension(); i++){
+		for(unsigned int j = 0; j < v1.Dimension(); j++){
+			m[i][j] = v1[j]*v2[i];
+		}
+	}
+}
 
 Matriz::Matriz(unsigned int ancho, unsigned int alto){
 	this->ancho = ancho;

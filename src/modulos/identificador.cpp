@@ -28,9 +28,11 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma){
 
 		Vector t = X*w;
 		t = t * (1/t.Norma());
-		//TODO: Vector por vector
-		//X = X + (-1)*(t*(t*X));
-		//Y = Y + (-1)*(t*(t*Y));
+
+		Matriz T = Matriz(t,t);
+		//TODO: Resta de matrices
+		X = X + (-1)*(T*X);
+		Y = Y + (-1)*(T*Y);
 		Vt[i] = w;
 	}
 
