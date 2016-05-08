@@ -6,11 +6,15 @@ Matriz operator*(double b, const Matriz& B){
 }
 
 
+Matriz::Matriz(){
+	
+}
+
 Matriz::Matriz(unsigned int ancho, unsigned int alto){
 	this->ancho = ancho;
 	this->alto = alto;
 	Vector v = Vector(ancho);
-	m = vector< Vector >(ancho, v);
+	m = vector< Vector >(alto, v);
 }
 /*
 
