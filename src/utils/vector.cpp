@@ -17,7 +17,7 @@ Vector::Vector(const Vector& v2){
 }
 
 
-Vector::RandomVector(unsigned int length ){
+Vector::RandomVector(unsigned int length){
 	Vector _randomVector = Vector(length);
 
 	for(int i = 0; i < _randomVector.Dimension(); i++){

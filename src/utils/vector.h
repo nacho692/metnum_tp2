@@ -19,7 +19,7 @@ class Vector{
 		Vector();
 		Vector(unsigned int n);
 		Vector(const Vector& v2);
-		RandomVector();
+		RandomVector(unsigned int length);
 		unsigned int Dimension() const;
 		void Agregar(const double& d);
 		double SumaTotal() const;
