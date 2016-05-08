@@ -12,6 +12,7 @@ Matriz::Matriz(unsigned int ancho, unsigned int alto){
 	Vector v = Vector(ancho);
 	m = vector< Vector >(ancho, v);
 }
+/*
 
 Matriz::Matriz(const vector<Digito>& set){
 	for(unsigned int i = 0; i < set.size(); i++){
@@ -22,7 +23,7 @@ Matriz::Matriz(const vector<Digito>& set){
 		m.push_back(f);
 	}
 }
-
+*/
 Matriz::Matriz(const Matriz& otra){
 	m = vector<Vector>(otra.m);
 	this->ancho = otra.ancho;

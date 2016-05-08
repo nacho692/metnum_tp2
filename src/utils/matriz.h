@@ -3,7 +3,7 @@
 
 #include "vector.h"
 #include <vector>
-#include "../modulos/digito.h"
+//#include "../modulos/digito.h"
 
 using namespace std;
 
@@ -17,7 +17,7 @@ class Matriz{
 		Matriz();
 		Matriz(unsigned int ancho, unsigned int alto);
 		Matriz(const Matriz& otra);
-		Matriz(const vector<Digito>& set);
+		//Matriz(const vector<Digito>& set);
 		unsigned int Ancho() const;
 		unsigned int Alto() const;
 		void Transponer();
