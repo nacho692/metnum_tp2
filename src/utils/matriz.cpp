@@ -6,11 +6,15 @@ Matriz operator*(double b, const Matriz& B){
 }
 
 
+Matriz::Matriz(){
+	
+}
+
 Matriz::Matriz(unsigned int ancho, unsigned int alto){
 	this->ancho = ancho;
 	this->alto = alto;
 	Vector v = Vector(ancho);
-	m = vector< Vector >(ancho, v);
+	m = vector< Vector >(alto, v);
 }
 /*
 
@@ -91,19 +95,28 @@ void Matriz::Transponer(){
 	(*this) = B;
 }
 
-double Matriz::MetodoPotencia(Vector& x, unsigned int nit,Vector& v) const{
-	v = x;
+double Matriz::MetodoPotenciaNIteraciones(Vector& x, unsigned int nit) const{
 	double a;
 	Matriz B = Matriz(*this);
 	for (unsigned int i = 1 ; i <= nit ; i++ ){
-		v = (B*v)*(1/((B*v).Norma()));
+		x = (B*x)*(1/((B*x).Norma()));
 	}
-	x = v;
-	a = (v*(B*v)) / (v*v);
+	a = (x*(B*x)) / (x*x);
 	return a;
 }
 
-
+double Matriz::MetodoPotenciaEpsilon(Vector& x, double e) const{
+	double a;
+	Matriz B = Matriz(*this);
+	Vector xNuevo = (B*x)*(1/((B*x).Norma()));
+	for (unsigned int i = 1 ; (x.Distancia(xNuevo)) > e ; i++ ){
+		x = xNuevo;
+		xNuevo = (B*x)*(1/((B*x).Norma()));
+	}
+	a = (xNuevo*(B*xNuevo)) / (xNuevo*xNuevo);
+	x = xNuevo;
+	return a;
+}
 
 
 Vector& Matriz::operator[](unsigned int i){
