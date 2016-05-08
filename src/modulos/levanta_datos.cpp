@@ -92,7 +92,22 @@ LevantaDatos::LevantaDatos(){
 
 void LevantaDatos::SetearKesimoFold(unsigned int k){
 	vector<unsigned int> fold = this->folds[k];
-	cout << fold[0] << " " << fold[1] << endl;
+	unsigned int indice_testing = 0;
+	unsigned int indice_training = 0;
+	for (unsigned int i = 0; i < this->digitos.Alto(); i++){
+		unsigned int j;
+		if (fold[i]){
+			for (j = 0; j < 784; j++){
+				this->digitos_training[indice_training][j] = this->digitos[i][j];
+			}
+			indice_training++;
+		} else {
+			for (j = 0; j < 784; j++){
+				this->digitos_testing[indice_testing][j] = this->digitos[i][j];
+			}
+			indice_testing++;
+		}
+	}
 }
 
 string LevantaDatos::FilePath() const{
@@ -111,4 +126,16 @@ unsigned int LevantaDatos::Gamma() const{
 }
 unsigned int LevantaDatos::CantidadFolds() const{
 	return this->cantidad_folds;
+}
+const Matriz& LevantaDatos::MatrizTraining() const{
+	return this->digitos_training;
+}
+const vector<string>& LevantaDatos::LabelsTraining() const{
+	return this->labels_training;
+}
+const Matriz& LevantaDatos::MatrizTesting() const{
+	return this->digitos_testing;
+}
+const vector<string>& LevantaDatos::LabelsTesting() const{
+	return this->labels_testing;
 }

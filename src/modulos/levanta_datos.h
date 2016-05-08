@@ -38,6 +38,12 @@ class LevantaDatos{
 		unsigned int Alpha() const;
 		unsigned int Gamma() const;
 		unsigned int CantidadFolds() const;
+
+		const Matriz& MatrizTraining() const;
+		const vector<string>& LabelsTraining() const;
+
+		const Matriz& MatrizTesting() const;
+		const vector<string>& LabelsTesting() const;
 };
 
 #endif
