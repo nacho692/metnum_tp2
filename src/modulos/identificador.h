@@ -14,7 +14,7 @@ class Identificador{
 		
 		Matriz tSet;
 		vector<int> clases;
-
+		//Matriz cambio de base
 		Matriz Vt;
 
 		struct Vecino{

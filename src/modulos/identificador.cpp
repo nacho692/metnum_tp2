@@ -1,25 +1,26 @@
-
 #include "identificador.h"
 
 void Identificador::PCA(const Matriz& set, unsigned int alpha){
 	Matriz X,Xt;
 	CentrarDividir(set,X,Xt);
+	
 	Matriz mCovarianza = Xt*X;
 	Matriz mDiagonal = Matriz ( alpha, alpha);
-	Matriz mCambioBase = Matriz ( alpha, mCovarianza.Ancho());
-	Matriz mDeflacion = mCovarianza;
-	Vector autovector;
+	Vector autovector = Vector(alpha);
+	Matriz mDeflacion;
+	this->Vt = Matriz ( alpha, mCovarianza.Ancho());
 
 	for(int i = 0; i < alpha ; i++){
-		autovector = Vector(alpha);
 		autovector.RandomVector();
 		mDiagonal[i][i] =  mCovarianza.MetodoPotenciaNIteraciones( autovector, 3);
-		mCambioBase[i] = autovector;
-		mDeflacion[i] = mDeflacion[i] - autovector * autovector * mDiagonal[i][i];
+		Vt[i] = autovector;
+		mDeflacion = Matriz( autovector, autovector) * mDiagonal[i][i];
 		mCovarianza = mCovarianza - mDeflacion;
 	}
 
-
+	//Mi cambio de base Vt
+	//Actualizo el training set 
+	this->tSet = mDiagonal;
 }
 
 void Identificador::PLS_DA(const Matriz& set, unsigned int gamma){
@@ -43,8 +44,9 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma){
 	Vt = Matriz(set.Ancho(),gamma);
 	for(unsigned int i = 0; i < gamma; i++){
 		Matriz M = Xt*Y*Yt*X;
-		//TODO: Hacerlo random
 		Vector w = Vector(M.Ancho());
+		
+		w.RandomVector();
 		M.MetodoPotenciaNIteraciones(w,5);
 		w = w * (1/w.Norma());
 
@@ -52,9 +54,8 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma){
 		t = t * (1/t.Norma());
 
 		Matriz T = Matriz(t,t);
-		//TODO: Resta de matrices
-		X = X + (-1)*(T*X);
-		Y = Y + (-1)*(T*Y);
+		X = X - (T*X);
+		Y = Y - (T*Y);
 		Vt[i] = w;
 	}
 

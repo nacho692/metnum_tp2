@@ -98,15 +98,15 @@ void LevantaDatos::SetearKesimoFold(unsigned int k){
 		unsigned int j;
 		if (fold[i]){ // Si es para training
 			this->labels_training[indice_training] = this->labels[i];
-			for (j = 0; j < 784; j++){
+			for (j = 0; j < 784; j++)
 				this->digitos_training[indice_training][j] = this->digitos[i][j];
-			}
+
 			indice_training++;
 		} else {
-			this->labels_testing[indice_testing] = this->labels[i]
-			for (j = 0; j < 784; j++){
+			this->labels_testing[indice_testing] = this->labels[i];
+			for (j = 0; j < 784; j++)
 				this->digitos_testing[indice_testing][j] = this->digitos[i][j];
-			}
+			
 			indice_testing++;
 		}
 	}
