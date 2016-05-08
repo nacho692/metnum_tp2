@@ -31,6 +31,7 @@ class Matriz{
 		Matriz operator* (const double& b) const;
 		Vector operator* (const Vector& v) const;
 		Matriz operator+(const Matriz& B) const;
+		Matriz operator-(const Matriz& B) const;
 
 		Matriz& operator=(const Matriz& B);
 

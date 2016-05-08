@@ -17,16 +17,11 @@ Vector::Vector(const Vector& v2){
 }
 
 
-Vector::RandomVector(unsigned int length ){
-	Vector _randomVector = Vector(length);
-
-	for(int i = 0; i < _randomVector.Dimension(); i++){
-		// initialize random seed: 
-  		srand (time(NULL));
-		_randomVector[i] = srand();
+void Vector::RandomVector(){
+  	srand (time(NULL));
+	for(int i = 0; i < this->Dimension(); i++){
+		(*this)[i] = rand()%2;
 	}
-
-	Vector(_randomVector);
 }
 
 unsigned int Vector::Dimension() const{

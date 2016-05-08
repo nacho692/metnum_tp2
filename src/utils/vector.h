@@ -8,6 +8,7 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 
+
 using namespace std;
 
 
@@ -19,7 +20,7 @@ class Vector{
 		Vector();
 		Vector(unsigned int n);
 		Vector(const Vector& v2);
-		RandomVector();
+		void RandomVector();
 		unsigned int Dimension() const;
 		void Agregar(const double& d);
 		double SumaTotal() const;

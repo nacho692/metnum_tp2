@@ -62,6 +62,16 @@ Matriz Matriz::operator+(const Matriz& B) const{
 	return A;
 }
 
+Matriz Matriz::operator-(const Matriz& B) const{
+	Matriz A = (*this);
+	for(unsigned int i = 0; i < this->Alto(); i++){
+		for(unsigned int j = 0; j < this->Ancho(); j++){
+			A[i][j] = m[i][j] - B[i][j];
+		}
+	}
+	return A;
+}
+
 Matriz Matriz::operator*(const double& b) const{
 	Matriz A = (*this);
 	for(unsigned int i = 0; i < this->Alto(); i++){

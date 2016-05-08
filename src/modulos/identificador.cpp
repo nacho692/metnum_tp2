@@ -1,5 +1,27 @@
 
 #include "identificador.h"
+
+void Identificador::PCA(const Matriz& set, unsigned int alpha){
+	Matriz X,Xt;
+	CentrarDividir(set,X,Xt);
+	Matriz mCovarianza = Xt*X;
+	Matriz mDiagonal = Matriz ( alpha, alpha);
+	Matriz mCambioBase = Matriz ( alpha, mCovarianza.Ancho());
+	Matriz mDeflacion = mCovarianza;
+	Vector autovector;
+
+	for(int i = 0; i < alpha ; i++){
+		autovector = Vector(alpha);
+		autovector.RandomVector();
+		mDiagonal[i][i] =  mCovarianza.MetodoPotenciaNIteraciones( autovector, 3);
+		mCambioBase[i] = autovector;
+		mDeflacion[i] = mDeflacion[i] - autovector * autovector * mDiagonal[i][i];
+		mCovarianza = mCovarianza - mDeflacion;
+	}
+
+
+}
+
 void Identificador::PLS_DA(const Matriz& set, unsigned int gamma){
 	Matriz X,Xt;
 	CentrarDividir(set,X,Xt);
@@ -45,7 +67,7 @@ void Identificador::CentrarDividir(const Matriz& set, Matriz& X, Matriz& Xt) con
 	//Esto es igual en ambos metodos
 	Xt = set;
 	Xt.Transponer();
-	double escalar = 1/sqrt(set.Alto());
+	double escalar = 1 / sqrt( set.Alto()-1 );
 
 	for(unsigned int i = 0; i < Xt.Alto(); i++){
 		//TODO: Vector + escalar
