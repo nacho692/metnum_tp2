@@ -16,6 +16,19 @@ Vector::Vector(const Vector& v2){
 	*this = v2;
 }
 
+
+Vector::RandomVector(unsigned int length ){
+	Vector _randomVector = Vector(length);
+
+	for(int i = 0; i < _randomVector.Dimension(); i++){
+		// initialize random seed: 
+  		srand (time(NULL));
+		_randomVector[i] = srand();
+	}
+
+	Vector(_randomVector);
+}
+
 unsigned int Vector::Dimension() const{
 	return v.size();
 }
@@ -63,6 +76,15 @@ Vector Vector::operator+(const Vector& v2) const{
 	ret = Vector(this->Dimension());
 	for(unsigned int i = 0; i < this->Dimension() ; i++){
 		ret[i] = (*this)[i]+v2[i];	
+	}	
+	return ret;
+}
+
+Vector Vector::operator-(const Vector& v2) const{
+	Vector ret;
+	ret = Vector(this->Dimension());
+	for(unsigned int i = 0; i < this->Dimension() ; i++){
+		ret[i] = (*this)[i]-v2[i];	
 	}	
 	return ret;
 }
