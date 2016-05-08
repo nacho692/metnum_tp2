@@ -7,6 +7,8 @@
 #include <sstream>
 #include <string>
 
+#include "../utils/matriz.h"
+
 using namespace std;
 
 class LevantaDatos{
@@ -17,10 +19,10 @@ class LevantaDatos{
 		unsigned int gamma;
 		unsigned int cantidad_folds;
 
-		vector<double> digitos;
-		vector< char * > labels;
+		vector< vector< unsigned int > > folds; // vector de 1 y 0 que me dice si el i-esimo valor es de training (1) o si es de testing (1) para el j-esimo fold
 
-		vector< vector< unsigned int > > folds; // vector de 1 y 0 que me dice si el i-esimo valor es de training (1) o si es de testing (1)
+		Matriz digitos;
+		vector<string> labels;
 
 
 	public:

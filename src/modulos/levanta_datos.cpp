@@ -46,17 +46,39 @@ LevantaDatos::LevantaDatos(){
 
 	// Levantar d´igitos
 
+	this->digitos = Matriz(784, 42000);
+
+
 	string linea;
 	ifstream data_file(this->FilePath());
 
 	if (data_file.is_open()){
 		getline(data_file, linea);
+		int  i = 0;
+		while ( getline(data_file, linea) ){
+			stringstream data_line;
+			string pixel;
+
+			data_line << linea;
+
+			unsigned int j = 0;
+			getline(data_line, pixel, ',');
+
+			this->labels.push_back(pixel);
+
+			while ( getline(data_line, pixel, ',') ){
+				this->digitos[i][j] = (double) stoi(pixel);
+				j++;
+			}
+
+			i++;
+			data_line.clear();
+		}
 
 		data_file.close();
 	} else {
 		cout << "No se abre la data" << endl;
 	}
-
 }
 
 string LevantaDatos::FilePath() const{
