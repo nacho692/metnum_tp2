@@ -41,7 +41,7 @@ void Identificador::PLS_DA(const Matriz& set ){
 		for(unsigned int j = 0; j < Y.Ancho(); j++){
 			Y[i][j] = -1;
 		}
-		Y[i][clases[i]] = 1;
+		Y[i][Clases()[i]] = 1;
 	}
 
 	Yt = Y;
@@ -108,14 +108,14 @@ int Identificador::kNN(const Vector& v) const{
 	for(unsigned int i = 0; i < tSet.Alto(); i++){
 		Vecino d;
 		d.distancia = vb.Distancia(tSet[i]);
-		d.clase = clases[i];
+		d.clase = Clases()[i];
 		distancias.push_back(d);
 	}
 
 	make_heap(distancias.begin(),distancias.end(),cmpVecinoDistancia);
 
 	vector<Vecino> vecinos;
-	for(unsigned int i = 0; i < cantidad_vecinos; i++){
+	for(unsigned int i = 0; i < Cantidad_Vecinos(); i++){
 		pop_heap(distancias.begin(), distancias.end(),cmpVecinoDistancia);
 		vecinos.push_back(distancias[distancias.size()-1]);
 		distancias.pop_back();
@@ -158,4 +158,7 @@ unsigned int Identificador::Gamma()const{
 }
 unsigned int Identificador::Cantidad_Vecinos()const{
 	return this->cantidad_vecinos;
+}
+const vector<int>& Identificador::Clases()const{
+	return this->clases;
 }
