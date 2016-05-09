@@ -19,7 +19,8 @@ class LevantaDatos{
 		unsigned int gamma;
 		unsigned int cantidad_folds;
 
-		vector< vector< unsigned int > > folds; // vector de 1 y 0 que me dice si el i-esimo valor es de training (1) o si es de testing (1) para el j-esimo fold
+		vector< vector< unsigned int > > folds; 
+		// vector de 1 y 0 que me dice si el i-esimo valor es de training (1) o si es de testing (1) para el j-esimo fold
 		Matriz digitos;
 		vector<int> labels;
 
