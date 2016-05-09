@@ -17,9 +17,9 @@ Vector::Vector(const Vector& v2){
 }
 
 void Vector::RandomVector(){
-  	srand (time(NULL));
+  	//srand (0);
 	for(int i = 0; i < this->Dimension(); i++){
-		(*this)[i] = rand()%2;
+		(*this)[i] = rand();
 	}
 }
 
@@ -53,6 +53,10 @@ double Vector::Norma() const{
 	}
 
 	return sqrt(sumCuadrados);
+}
+
+void Vector::Resize(unsigned int n) {
+	v.resize(n);
 }
 
 double Vector::Distancia(const Vector& v2) const{

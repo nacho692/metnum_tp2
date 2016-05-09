@@ -1,36 +1,49 @@
 #include "identificador.h"
 
-Identificador::Identificador( vector<int> clases, unsigned int cantidad_vecinos, unsigned int alpha, unsigned int gamma){
+Identificador::Identificador( vector<int> clases, unsigned int cantidad_vecinos){
 	this->clases = clases;
 	this->cantidad_vecinos = cantidad_vecinos;
-	this->gamma = gamma;
-	this->alpha = alpha;
+//	this->gamma = gamma;
+//	this->alpha = alpha;
 }
 
-void Identificador::PCA(const Matriz& set){
+void Identificador::SinMetodo(const Matriz& set){
 	Matriz X,Xt;
 	CentrarDividir(set,X,Xt);
+	this->tSet = X;
+	//Cambio de base es identidad, queda todo
+	this->Vt = Matriz(X.Ancho(),X.Ancho());
+	for(unsigned int i = 0; i < Vt.Alto(); i++){
+		for(unsigned int j = 0; j < Vt.Ancho(); j++){
+			this->Vt[i][j] = (i==j);
+		}
+	}
+}
+
+void Identificador::PCA(const Matriz& set, unsigned int alpha){
+	Matriz X,Xt;
 	
+	CentrarDividir(set,X,Xt);
 	Matriz mCovarianza = Xt*X;
-	Vector autovector = Vector( Alpha() );
+	Vector autovector = Vector( set.Ancho() );
 	Matriz mDeflacion;
 	double autovalor;
-	this->Vt = Matriz ( Alpha(), mCovarianza.Ancho());
+	this->Vt = Matriz ( mCovarianza.Alto(), alpha);
 
-	for(int i = 0; i < Alpha() ; i++){
+	for(unsigned int i = 0; i < alpha; i++){
 		autovector.RandomVector();
 		autovalor =  mCovarianza.MetodoPotenciaNIteraciones( autovector, 3);
-		Vt[i] = autovector;
+		this->Vt[i] = autovector;
 		mDeflacion = Matriz( autovector, autovector) * autovalor;
 		mCovarianza = mCovarianza - mDeflacion;
 	}
-
 	//Mi cambio de base Vt
 	//Actualizo el training set 
-	this->tSet = Vt*Xt;
+	tSet = Vt*Xt;
+	this->tSet.Transponer();
 }
 
-void Identificador::PLS_DA(const Matriz& set ){
+void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 	Matriz X,Xt;
 	CentrarDividir(set,X,Xt);
 
@@ -48,13 +61,13 @@ void Identificador::PLS_DA(const Matriz& set ){
 	Yt.Transponer();
 
 	Matriz XC = Xt;
-	Vt = Matriz( set.Ancho(), Gamma());
-	for(unsigned int i = 0; i < Gamma(); i++){
+	this->Vt = Matriz( set.Ancho(), gamma);
+	for(unsigned int i = 0; i < gamma; i++){
 		Matriz M = Xt*Y*Yt*X;
 		Vector w = Vector( M.Ancho() );
 		
 		w.RandomVector();
-		M.MetodoPotenciaNIteraciones(w,5);
+		M.MetodoPotenciaNIteraciones(w,3);
 		w = w * (1/w.Norma());
 
 		Vector t = X*w;
@@ -69,6 +82,8 @@ void Identificador::PLS_DA(const Matriz& set ){
 	//Tengo mi transformacion
 	//Actualizo el training set
 	tSet = Vt*XC;
+	tSet.Transponer();
+
 }
 
 void Identificador::CentrarDividir(const Matriz& set, Matriz& X, Matriz& Xt){
@@ -101,9 +116,12 @@ const Matriz& Identificador::trainingSet() const{
 }
 
 int Identificador::kNN(const Vector& v) const{
-	//TODO: Cambio de base con V
-	Vector vb = Vt*v;
 
+	Vector vb = (v - this->medias)*(1/sqrt(tSet.Alto()-1));
+	//Cambio de base
+	vb = Vt*vb;
+	vb.Resize(Vt.Alto());
+	
 	vector<Vecino> distancias;
 	for(unsigned int i = 0; i < tSet.Alto(); i++){
 		Vecino d;
@@ -149,13 +167,13 @@ int Identificador::kNN(const Vector& v) const{
 
 	return claseMax;
 }
-
+/*
 unsigned int Identificador::Alpha()const{
 	return this->alpha;
 }
 unsigned int Identificador::Gamma()const{
 	return this->gamma;
-}
+}*/
 unsigned int Identificador::Cantidad_Vecinos()const{
 	return this->cantidad_vecinos;
 }

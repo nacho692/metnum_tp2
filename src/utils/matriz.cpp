@@ -13,6 +13,8 @@ Matriz::Matriz(const Vector& v1, const Vector& v2){
 	Vector v = Vector(v2.Dimension());
 	m = vector< Vector >(v1.Dimension(), v);
 
+	this->ancho = v2.Dimension();
+	this->alto = v1.Dimension();
 	for(unsigned int i = 0; i < v2.Dimension(); i++){
 		for(unsigned int j = 0; j < v1.Dimension(); j++){
 			m[i][j] = v1[j]*v2[i];
@@ -86,7 +88,7 @@ Matriz Matriz::operator*(const Matriz& B) const{
 	//A = THIS*B
 	Matriz C = B;
 	C.Transponer();
-	Matriz A(alto,B.Ancho());
+	Matriz A(B.Ancho(),alto);
 	for(unsigned int i = 0; i < A.Alto(); i++){
 		for(unsigned j = 0; j < A.Ancho(); j++){
 			A[i][j] = m[i]*C[j];

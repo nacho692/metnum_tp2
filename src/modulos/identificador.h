@@ -8,10 +8,9 @@
 
 class Identificador{
 	private:
-		unsigned int alpha;
 		unsigned int cantidad_vecinos;
-		unsigned int gamma;
-		
+		//unsigned int alpha;
+		//unsigned int gamma;
 		Matriz tSet;
 		vector<int> clases;
 		Vector medias;
@@ -37,18 +36,20 @@ class Identificador{
 		
 		void CentrarDividir(const Matriz& set, Matriz& X, Matriz& Xt);
 	public:
-		Identificador( vector<int> clases, unsigned int cantidad_vecinos, unsigned int alpha, unsigned int gamma);
+		Identificador( vector<int> clases, unsigned int cantidad_vecinos);
 
 		//Tienen que modificar tSet y Vt ambas
-		void PCA(const Matriz& set);
-		void PLS_DA(const Matriz& set);
+		void PCA(const Matriz& set, unsigned int alpha);
+		void PLS_DA(const Matriz& set, unsigned int gamma);
+		void SinMetodo(const Matriz& set);
+
 		int kNN(const Vector& v) const;
 		//Getters
 		const Matriz& trainingSet() const;
 		const Matriz& cambioBase() const;
 		const vector<int>& Clases()const;
-		unsigned int Alpha()const;
-		unsigned int Gamma()const;
+		//unsigned int Alpha()const;
+		//unsigned int Gamma()const;
 		unsigned int Cantidad_Vecinos()const;
 };
 

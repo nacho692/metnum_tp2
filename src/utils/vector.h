@@ -26,6 +26,7 @@ class Vector{
 		double SumaTotal() const;
 		double Media() const;
 		double Norma() const;
+		void Resize(unsigned int n);
 		double Distancia(const Vector& v2) const;
 		Vector operator+(const Vector& v2) const;
 		Vector operator-(const Vector& v2) const;
