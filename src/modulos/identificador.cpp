@@ -1,16 +1,23 @@
 #include "identificador.h"
 
-void Identificador::PCA(const Matriz& set, unsigned int alpha){
+Identificador::Identificador( vector<int> clases, unsigned int cantidad_vecinos, unsigned int alpha, unsigned int gamma){
+	this->clases = clases;
+	this->cantidad_vecinos = cantidad_vecinos;
+	this->gamma = gamma;
+	this->alpha = alpha;
+}
+
+void Identificador::PCA(const Matriz& set){
 	Matriz X,Xt;
 	CentrarDividir(set,X,Xt);
 	
 	Matriz mCovarianza = Xt*X;
-	Vector autovector = Vector(alpha);
+	Vector autovector = Vector( Alpha() );
 	Matriz mDeflacion;
 	double autovalor;
-	this->Vt = Matriz ( alpha, mCovarianza.Ancho());
+	this->Vt = Matriz ( Alpha(), mCovarianza.Ancho());
 
-	for(int i = 0; i < alpha ; i++){
+	for(int i = 0; i < Alpha() ; i++){
 		autovector.RandomVector();
 		autovalor =  mCovarianza.MetodoPotenciaNIteraciones( autovector, 3);
 		Vt[i] = autovector;
@@ -23,7 +30,7 @@ void Identificador::PCA(const Matriz& set, unsigned int alpha){
 	this->tSet = Vt*Xt;
 }
 
-void Identificador::PLS_DA(const Matriz& set, unsigned int gamma){
+void Identificador::PLS_DA(const Matriz& set ){
 	Matriz X,Xt;
 	CentrarDividir(set,X,Xt);
 
@@ -41,10 +48,10 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma){
 	Yt.Transponer();
 
 	Matriz XC = Xt;
-	Vt = Matriz(set.Ancho(),gamma);
-	for(unsigned int i = 0; i < gamma; i++){
+	Vt = Matriz( set.Ancho(), Gamma());
+	for(unsigned int i = 0; i < Gamma(); i++){
 		Matriz M = Xt*Y*Yt*X;
-		Vector w = Vector(M.Ancho());
+		Vector w = Vector( M.Ancho() );
 		
 		w.RandomVector();
 		M.MetodoPotenciaNIteraciones(w,5);
@@ -64,7 +71,7 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma){
 	tSet = Vt*XC;
 }
 
-void Identificador::CentrarDividir(const Matriz& set, Matriz& X, Matriz& Xt) const{
+void Identificador::CentrarDividir(const Matriz& set, Matriz& X, Matriz& Xt){
 	//Esto es igual en ambos metodos
 	Xt = set;
 	Xt.Transponer();
@@ -74,7 +81,7 @@ void Identificador::CentrarDividir(const Matriz& set, Matriz& X, Matriz& Xt) con
 	for(unsigned int i = 0; i < Xt.Alto(); i++){
 		//TODO: Vector + escalar
 		double media = Xt[i].Media();
-		medias[i] = media;
+		this->medias[i] = media;
 		for(unsigned int j = 0; j < Xt.Ancho(); j++){
 			Xt[i][j] -= media;
 			Xt[i][j] *= escalar;
@@ -141,4 +148,14 @@ int Identificador::kNN(const Vector& v) const{
 	}
 
 	return claseMax;
+}
+
+unsigned int Identificador::Alpha()const{
+	return this->alpha;
+}
+unsigned int Identificador::Gamma()const{
+	return this->gamma;
+}
+unsigned int Identificador::Cantidad_Vecinos()const{
+	return this->cantidad_vecinos;
 }
