@@ -5,19 +5,22 @@ Matriz operator*(double b, const Matriz& B){
 	return B*b;
 }
 
+Vector operator*(const Vector& v, const Matriz& B){
+	return B.Transponer()*v;
+}
+
 
 Matriz::Matriz(){
 	
 }
 Matriz::Matriz(const Vector& v1, const Vector& v2){
-
 	(*this) = Matriz(v2.Dimension(),v1.Dimension());
-	for(unsigned int i = 0; i < v2.Dimension(); i++){
-		for(unsigned int j = 0; j < v1.Dimension(); j++){
-			m[i][j] = v1[j]*v2[i];
+
+	for(unsigned int i = 0; i < v1.Dimension(); i++){
+		for(unsigned int j = 0; j < v2.Dimension(); j++){
+			m[i][j] = v1[i]*v2[j];
 		}
 	}
-	cout << "AHI VA" << endl;
 }
 
 Matriz::Matriz(unsigned int ancho, unsigned int alto){
@@ -38,6 +41,7 @@ Matriz::Matriz(const vector<Digito>& set){
 	}
 }
 */
+
 Matriz::Matriz(const Matriz& otra){
 	m = vector<Vector>(otra.m);
 	this->ancho = otra.ancho;

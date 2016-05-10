@@ -32,9 +32,9 @@ void Identificador::PCA(const Matriz& set, unsigned int alpha){
 
 	for(unsigned int i = 0; i < alpha; i++){
 		autovector.RandomVector();
-		autovalor =  mCovarianza.MetodoPotenciaNIteraciones( autovector, 3);
+		autovalor =  mCovarianza.MetodoPotenciaNIteraciones( autovector, 10);
 		this->Vt[i] = autovector;
-		mDeflacion = Matriz( autovector, autovector) * autovalor;
+		mDeflacion = Matriz( autovector, autovector * autovalor );
 		mCovarianza = mCovarianza - mDeflacion;
 	}
 	//Mi cambio de base Vt
@@ -47,7 +47,6 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 	Matriz X,Xt;
 	CentrarDividir(set,X,Xt);
 
-	Matriz Yt;
 	Matriz Y(10,set.Alto());
 
 	for(unsigned int i = 0; i < Y.Alto(); i++){
@@ -56,50 +55,35 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 		}
 		Y[i][Clases()[i]] = 1;
 	}
-	Yt = Y.Transponer();
+	Matriz Yt = Y.Transponer();
 
-	Matriz XC = Xt;
-	this->Vt = Matriz( set.Ancho(), gamma);
+	this->Vt = Matriz(set.Ancho(), gamma);
 	for(unsigned int i = 0; i < gamma; i++){
-		//Matriz M = Xt*Y*Yt*X;
-		cout << i << endl;
-		Matriz M = Yt*X;
-		M = M.Transponer()*M;
+		//Matriz M = Xt*Y*Yt*X = At*A
+		Matriz A = Yt*X;
+		Matriz M = A.Transponer()*A;
 
 		Vector w = Vector( M.Ancho() );
 		w.RandomVector();
-		M.MetodoPotenciaNIteraciones(w,3);
-		cout << w.Dimension() << endl;
+		M.MetodoPotenciaNIteraciones(w,10);
 		w = w * (1/w.Norma());
+		Vt[i] = w;
 
 		Vector t = X*w;
-		cout << t.Dimension() << endl;
-		double d = (1/t.Norma());
-		t = t*d;
+		t = t*(1/t.Norma());
 
-		//Matriz T = Matriz(t,t);
-		//Aux = t*t^t*X
-		Matriz Aux = VectorMatriz(t,X);
-		X = X - Aux;
-		Xt = X.Transponer();
-		Aux = VectorMatriz(t,Y);
-		Y = Y - Aux;
+		//t*t^t*X = t*(tt*X)
+		X = X - Matriz(t,t*X);
+		Y = Y - Matriz(t,t*Y);
 		Yt = Y.Transponer();
-
-		Vt[i] = w;
 	}
 
 	//Tengo mi transformacion
 	//Actualizo el training set
-	tSet = (Vt*XC).Transponer();
+	tSet = (Vt*Xt).Transponer();
 
 }
 
-Matriz Identificador::VectorMatriz(const Vector&, const Matriz& X) const{
-	Matriz Y = Matriz(X.Ancho(),X.Alto());
-	//for(unsigned int i = 0; i < )
-	return Matriz();
-}
 
 void Identificador::CentrarDividir(const Matriz& set, Matriz& X, Matriz& Xt){
 	//Esto es igual en ambos metodos

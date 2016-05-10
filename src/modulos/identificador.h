@@ -35,7 +35,7 @@ class Identificador{
 
 		
 		void CentrarDividir(const Matriz& set, Matriz& X, Matriz& Xt);
-		Matriz VectorMatriz(const Vector&, const Matriz& X) const;
+		Matriz VectorMatriz(const Vector& t, const Matriz& X) const;
 	public:
 		Identificador( vector<int> clases, unsigned int cantidad_vecinos);
 
