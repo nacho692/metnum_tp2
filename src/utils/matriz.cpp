@@ -37,6 +37,7 @@ Matriz::Matriz(const vector<Digito>& set){
 	}
 }
 */
+
 Matriz::Matriz(const Matriz& otra){
 	m = vector<Vector>(otra.m);
 	this->ancho = otra.ancho;

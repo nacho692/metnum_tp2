@@ -75,7 +75,6 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 		t = t*d;
 
 		//Matriz T = Matriz(t,t);
-		//Aux = t*t^t*X
 		Matriz Aux = VectorMatriz(t,X);
 		X = X - Aux;
 		Xt = X.Transponer();
@@ -93,14 +92,14 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 }
 
 //Simulamos la situación  (v*vt)*X= V * X porque V tiene dimensiones muy grandes (+ de 30000x30000)
-Matriz Identificador::VectorMatriz(const Vector&, const Matriz& X) const{
+Matriz Identificador::VectorMatriz(const Vector& t, const Matriz& X) const{
 	Matriz Y = Matriz(X.Ancho(),X.Alto());
 	double val;
 	for(unsigned int i = 0; i < X.Alto(); i++){
 		for (unsigned int j = 0; j < X.Alto(); j++){
 			val=0;
 			for(unsigned int k = 0; k < X.Alto(); k++)
-				val+= t[i]*t[k]*X[k][j];
+				val += t[i]*t[k]*X[k][j];
 			Y[i][j] = val;
 		}
 	}
