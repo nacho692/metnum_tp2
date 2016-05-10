@@ -17,7 +17,6 @@ Matriz::Matriz(const Vector& v1, const Vector& v2){
 			m[i][j] = v1[j]*v2[i];
 		}
 	}
-	cout << "AHI VA" << endl;
 }
 
 Matriz::Matriz(unsigned int ancho, unsigned int alto){

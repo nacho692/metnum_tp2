@@ -18,3 +18,5 @@ data/test.csv
 data/train.csv
 src/data
 /src/utils/matriz.o
+src/utils/knn.o
+src/utils/digito.o

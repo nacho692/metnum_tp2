@@ -62,18 +62,15 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 	this->Vt = Matriz( set.Ancho(), gamma);
 	for(unsigned int i = 0; i < gamma; i++){
 		//Matriz M = Xt*Y*Yt*X;
-		cout << i << endl;
 		Matriz M = Yt*X;
 		M = M.Transponer()*M;
 
 		Vector w = Vector( M.Ancho() );
 		w.RandomVector();
 		M.MetodoPotenciaNIteraciones(w,3);
-		cout << w.Dimension() << endl;
 		w = w * (1/w.Norma());
 
 		Vector t = X*w;
-		cout << t.Dimension() << endl;
 		double d = (1/t.Norma());
 		t = t*d;
 
@@ -95,10 +92,19 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 
 }
 
+//Simulamos la situación  (v*vt)*X= V * X porque V tiene dimensiones muy grandes (+ de 30000x30000)
 Matriz Identificador::VectorMatriz(const Vector&, const Matriz& X) const{
 	Matriz Y = Matriz(X.Ancho(),X.Alto());
-	//for(unsigned int i = 0; i < )
-	return Matriz();
+	double val;
+	for(unsigned int i = 0; i < X.Alto(); i++){
+		for (unsigned int j = 0; j < X.Alto(); j++){
+			val=0;
+			for(unsigned int k = 0; k < X.Alto(); k++)
+				val+= t[i]*t[k]*X[k][j];
+			Y[i][j] = val;
+		}
+	}
+	return Y;
 }
 
 void Identificador::CentrarDividir(const Matriz& set, Matriz& X, Matriz& Xt){
