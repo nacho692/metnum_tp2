@@ -18,3 +18,5 @@ data/test.csv
 data/train.csv
 src/data
 /src/utils/matriz.o
+modulos/escupe_datos.o
+src/modulos/escupe_datos.o
