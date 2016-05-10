@@ -19,7 +19,7 @@ Vector::Vector(const Vector& v2){
 void Vector::RandomVector(){
   	//srand (0);
 	for(int i = 0; i < this->Dimension(); i++){
-		(*this)[i] = rand();
+		(*this)[i] = (double)rand() / RAND_MAX;
 	}
 }
 
