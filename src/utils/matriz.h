@@ -39,5 +39,6 @@ class Matriz{
 };
 
 Matriz operator*(double b, const Matriz& B);
+Vector operator*(const Vector& v, const Matriz& B);
 
 #endif
