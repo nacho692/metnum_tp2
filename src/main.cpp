@@ -13,24 +13,20 @@ void testearTrainingSet(Identificador& id, LevantaDatos& ld, Matriz& matriz_conf
 	}	
 }
 
-void testear(int fold, char const *argv[]){
-
-	// Todo : estoy levantando los datos adentros como un boludo
-	
-	string nombre_entrada(argv[1]);
-	LevantaDatos ld(nombre_entrada);
-	cout << "Datos levantados.." << endl;
-
+void testear(int fold, LevantaDatos& ld){
+	cout << "Seteando " << fold << "-esimo fold..." << endl;
 	ld.SetearKesimoFold(fold);
-	cout << fold << "-esimo fold seteado para testing.." << endl;
 
+	cout << "Preparando identificador para PCA con los folds de training..." << endl;
 	Matriz mt = ld.MatrizTraining();
 	Identificador id(ld.LabelsTraining(),ld.CantidadVecinos());
 	id.PCA(mt,100);
-	cout << "Preparado identificador para PCA.." << endl;
 
+	cout << "Reconociendo dígitos del fold de testing..." << endl;
 	Matriz matriz_confusion(10, 10);
 	testearTrainingSet(id, ld, matriz_confusion);
+
+	cout << "Matriz de confusion : " << endl;
 	cout << matriz_confusion << endl;
 	// EscupeDatos ep(nombre_salida, matriz_confusion);
 }
@@ -38,10 +34,17 @@ void testear(int fold, char const *argv[]){
 int main(int argc, char const *argv[]){ 
 	/* argv
 	nombre_entrada
-	nombre_salida_utilizar	(0: kNN , 1: PCA + kNN ,2: PLS-DA + kNN)
+	nombre_salida
+	metodo_a_utilizar	(0: kNN , 1: PCA + kNN ,2: PLS-DA + kNN)
 	*/
+	string nombre_entrada(argv[1]);
+	string nombre_salida(argv[2]);
+	string metodo_a_utilizar(argv[3]);
 
-	testear(1, argv);
+	cout << "Levantando datos..." << endl;
+	LevantaDatos ld(nombre_entrada);
+
+	testear(1, ld);
 
 	return 0;
 }
