@@ -14,8 +14,10 @@ class Identificador{
 		Matriz tSet;
 		vector<int> clases;
 		Vector medias;
+
 		//Matriz cambio de base
 		Matriz Vt;
+		Vector autovalores;
 
 		struct Vecino{
 			double distancia;
@@ -49,6 +51,7 @@ class Identificador{
 		const Matriz& trainingSet() const;
 		const Matriz& cambioBase() const;
 		const vector<int>& Clases()const;
+		const Vector& AutoValores() const;
 		//unsigned int Alpha()const;
 		//unsigned int Gamma()const;
 		unsigned int Cantidad_Vecinos()const;

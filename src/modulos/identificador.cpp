@@ -29,10 +29,11 @@ void Identificador::PCA(const Matriz& set, unsigned int alpha){
 	Matriz mDeflacion;
 	double autovalor;
 	this->Vt = Matriz ( mCovarianza.Alto(), alpha);
-
+	this->autovalores = Vector(alpha);
 	for(unsigned int i = 0; i < alpha; i++){
 		autovector.RandomVector();
 		autovalor =  mCovarianza.MetodoPotenciaNIteraciones( autovector, 10);
+		this->autovalores[i] = autovalor;
 		this->Vt[i] = autovector;
 		mDeflacion = Matriz( autovector, autovector * autovalor );
 		mCovarianza = mCovarianza - mDeflacion;
@@ -58,6 +59,7 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 	Matriz Yt = Y.Transponer();
 
 	this->Vt = Matriz(set.Ancho(), gamma);
+	this->autovalores = Vector(gamma);
 	for(unsigned int i = 0; i < gamma; i++){
 		//Matriz M = Xt*Y*Yt*X = At*A
 		Matriz A = Yt*X;
@@ -65,7 +67,8 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 
 		Vector w = Vector( M.Ancho() );
 		w.RandomVector();
-		M.MetodoPotenciaNIteraciones(w,10);
+		this->autovalores[i] = M.MetodoPotenciaNIteraciones(w,10);
+
 		w = w * (1/w.Norma());
 		Vt[i] = w;
 
@@ -111,6 +114,12 @@ const Matriz& Identificador::cambioBase() const{
 const Matriz& Identificador::trainingSet() const{
 	return tSet;
 }
+
+
+const Vector& Identificador::AutoValores() const{
+	return autovalores;
+}
+
 
 int Identificador::kNN(const Vector& v) const{
 
