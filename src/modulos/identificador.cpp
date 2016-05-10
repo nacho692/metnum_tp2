@@ -39,8 +39,8 @@ void Identificador::PCA(const Matriz& set, unsigned int alpha){
 	}
 	//Mi cambio de base Vt
 	//Actualizo el training set 
-	tSet = Vt*Xt;
-	this->tSet.Transponer();
+	tSet = (Vt*Xt).Transponer();
+	//tSet = tSet.Transponer();
 }
 
 void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
@@ -56,40 +56,54 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 		}
 		Y[i][Clases()[i]] = 1;
 	}
-
-	Yt = Y;
-	Yt.Transponer();
+	Yt = Y.Transponer();
 
 	Matriz XC = Xt;
 	this->Vt = Matriz( set.Ancho(), gamma);
 	for(unsigned int i = 0; i < gamma; i++){
-		Matriz M = Xt*Y*Yt*X;
+		//Matriz M = Xt*Y*Yt*X;
+		cout << i << endl;
+		Matriz M = Yt*X;
+		M = M.Transponer()*M;
+
 		Vector w = Vector( M.Ancho() );
-		
 		w.RandomVector();
 		M.MetodoPotenciaNIteraciones(w,3);
+		cout << w.Dimension() << endl;
 		w = w * (1/w.Norma());
 
 		Vector t = X*w;
-		t = t * (1/t.Norma());
+		cout << t.Dimension() << endl;
+		double d = (1/t.Norma());
+		t = t*d;
 
-		Matriz T = Matriz(t,t);
-		X = X - (T*X);
-		Y = Y - (T*Y);
+		//Matriz T = Matriz(t,t);
+		//Aux = t*t^t*X
+		Matriz Aux = VectorMatriz(t,X);
+		X = X - Aux;
+		Xt = X.Transponer();
+		Aux = VectorMatriz(t,Y);
+		Y = Y - Aux;
+		Yt = Y.Transponer();
+
 		Vt[i] = w;
 	}
 
 	//Tengo mi transformacion
 	//Actualizo el training set
-	tSet = Vt*XC;
-	tSet.Transponer();
+	tSet = (Vt*XC).Transponer();
 
+}
+
+Matriz Identificador::VectorMatriz(const Vector&, const Matriz& X) const{
+	Matriz Y = Matriz(X.Ancho(),X.Alto());
+	//for(unsigned int i = 0; i < )
+	return Matriz();
 }
 
 void Identificador::CentrarDividir(const Matriz& set, Matriz& X, Matriz& Xt){
 	//Esto es igual en ambos metodos
-	Xt = set;
-	Xt.Transponer();
+	Xt = set.Transponer();
 	double escalar = 1 / sqrt( set.Alto()-1 );
 	this->medias = Vector(Xt.Alto());
 
@@ -103,8 +117,7 @@ void Identificador::CentrarDividir(const Matriz& set, Matriz& X, Matriz& Xt){
 		}
 	}
 
-	X = Xt;
-	X.Transponer();
+	X = Xt.Transponer();
 }
 
 const Matriz& Identificador::cambioBase() const{

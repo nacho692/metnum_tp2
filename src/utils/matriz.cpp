@@ -10,16 +10,14 @@ Matriz::Matriz(){
 	
 }
 Matriz::Matriz(const Vector& v1, const Vector& v2){
-	Vector v = Vector(v2.Dimension());
-	m = vector< Vector >(v1.Dimension(), v);
 
-	this->ancho = v2.Dimension();
-	this->alto = v1.Dimension();
+	(*this) = Matriz(v2.Dimension(),v1.Dimension());
 	for(unsigned int i = 0; i < v2.Dimension(); i++){
 		for(unsigned int j = 0; j < v1.Dimension(); j++){
 			m[i][j] = v1[j]*v2[i];
 		}
 	}
+	cout << "AHI VA" << endl;
 }
 
 Matriz::Matriz(unsigned int ancho, unsigned int alto){
@@ -86,8 +84,7 @@ Matriz Matriz::operator*(const double& b) const{
 
 Matriz Matriz::operator*(const Matriz& B) const{
 	//A = THIS*B
-	Matriz C = B;
-	C.Transponer();
+	Matriz C = B.Transponer();
 	Matriz A(B.Ancho(),alto);
 	for(unsigned int i = 0; i < A.Alto(); i++){
 		for(unsigned j = 0; j < A.Ancho(); j++){
@@ -99,22 +96,22 @@ Matriz Matriz::operator*(const Matriz& B) const{
 
 //Multiplica un B*v
 Vector Matriz::operator*(const Vector& v) const{
-	unsigned int min;
-	Vector v2 = Vector((*this)[0].Dimension());
-	for ( unsigned int i = 0 ; i < this->Alto() ; i++ ){
-		v2[i] = (*this)[i]*v;
+	Vector v2 = Vector(Alto());
+
+	for (unsigned int i = 0 ; i < this->Alto(); i++ ){
+		v2[i] = this->m[i]*v;
 	}
 	return v2;
 }
 
-void Matriz::Transponer(){
+Matriz Matriz::Transponer() const{
 	Matriz B(alto,ancho);
 	for(unsigned int i = 0; i < this->Alto(); i++){
 		for(unsigned j = 0; j < this->Ancho(); j++){
 			B[j][i] = m[i][j];
 		}
 	}
-	(*this) = B;
+	return B;
 }
 
 double Matriz::MetodoPotenciaNIteraciones(Vector& x, unsigned int nit) const{

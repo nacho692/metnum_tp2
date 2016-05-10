@@ -21,7 +21,7 @@ class Matriz{
 		//Matriz(const vector<Digito>& set);
 		unsigned int Ancho() const;
 		unsigned int Alto() const;
-		void Transponer();
+		Matriz Transponer() const;
 		double MetodoPotenciaNIteraciones(Vector& x, unsigned int nit) const;
 		double MetodoPotenciaEpsilon(Vector& x, double e) const;
 
