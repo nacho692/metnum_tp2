@@ -1,11 +1,11 @@
 #include "levanta_datos.h"
 
-#define INPUT_FILE_PATH "tests/test1.in"
+string INPUT_FILE_PATH = "tests/";
 
-LevantaDatos::LevantaDatos(){
+LevantaDatos::LevantaDatos(string input_file_name){
 	// Levantar inputs
 	string line;
-	ifstream input_file(INPUT_FILE_PATH);
+	ifstream input_file(INPUT_FILE_PATH + input_file_name);
 
 	if (input_file.is_open()){
 		stringstream iss;

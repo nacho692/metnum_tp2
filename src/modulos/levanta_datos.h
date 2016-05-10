@@ -31,7 +31,7 @@ class LevantaDatos{
 		vector<int> labels_training;
 
 	public:
-		LevantaDatos();
+		LevantaDatos(string input_file_name);
 		void SetearKesimoFold(unsigned int k);
 
 		string FilePath() const;

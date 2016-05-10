@@ -29,12 +29,13 @@ void Identificador::PCA(const Matriz& set, unsigned int alpha){
 	Matriz mDeflacion;
 	double autovalor;
 	this->Vt = Matriz ( mCovarianza.Alto(), alpha);
-
+	this->autovalores = Vector(alpha);
 	for(unsigned int i = 0; i < alpha; i++){
 		autovector.RandomVector();
-		autovalor =  mCovarianza.MetodoPotenciaNIteraciones( autovector, 3);
+		autovalor =  mCovarianza.MetodoPotenciaNIteraciones( autovector, 10);
+		this->autovalores[i] = autovalor;
 		this->Vt[i] = autovector;
-		mDeflacion = Matriz( autovector, autovector) * autovalor;
+		mDeflacion = Matriz( autovector, autovector * autovalor );
 		mCovarianza = mCovarianza - mDeflacion;
 	}
 	//Mi cambio de base Vt
@@ -47,7 +48,6 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 	Matriz X,Xt;
 	CentrarDividir(set,X,Xt);
 
-	Matriz Yt;
 	Matriz Y(10,set.Alto());
 
 	for(unsigned int i = 0; i < Y.Alto(); i++){
@@ -56,55 +56,37 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 		}
 		Y[i][Clases()[i]] = 1;
 	}
-	Yt = Y.Transponer();
+	Matriz Yt = Y.Transponer();
 
-	Matriz XC = Xt;
-	this->Vt = Matriz( set.Ancho(), gamma);
+	this->Vt = Matriz(set.Ancho(), gamma);
+	this->autovalores = Vector(gamma);
 	for(unsigned int i = 0; i < gamma; i++){
-		//Matriz M = Xt*Y*Yt*X;
-		Matriz M = Yt*X;
-		M = M.Transponer()*M;
+		//Matriz M = Xt*Y*Yt*X = At*A
+		Matriz A = Yt*X;
+		Matriz M = A.Transponer()*A;
 
 		Vector w = Vector( M.Ancho() );
 		w.RandomVector();
-		M.MetodoPotenciaNIteraciones(w,3);
+		this->autovalores[i] = M.MetodoPotenciaNIteraciones(w,10);
+
 		w = w * (1/w.Norma());
+		Vt[i] = w;
 
 		Vector t = X*w;
-		double d = (1/t.Norma());
-		t = t*d;
+		t = t*(1/t.Norma());
 
-		//Matriz T = Matriz(t,t);
-		Matriz Aux = VectorMatriz(t,X);
-		X = X - Aux;
-		Xt = X.Transponer();
-		Aux = VectorMatriz(t,Y);
-		Y = Y - Aux;
+		//t*t^t*X = t*(tt*X)
+		X = X - Matriz(t,t*X);
+		Y = Y - Matriz(t,t*Y);
 		Yt = Y.Transponer();
-
-		Vt[i] = w;
 	}
 
 	//Tengo mi transformacion
 	//Actualizo el training set
-	tSet = (Vt*XC).Transponer();
+	tSet = (Vt*Xt).Transponer();
 
 }
 
-//Simulamos la situación  (v*vt)*X= V * X porque V tiene dimensiones muy grandes (+ de 30000x30000)
-Matriz Identificador::VectorMatriz(const Vector& t, const Matriz& X) const{
-	Matriz Y = Matriz(X.Ancho(),X.Alto());
-	double val;
-	for(unsigned int i = 0; i < X.Alto(); i++){
-		for (unsigned int j = 0; j < X.Alto(); j++){
-			val=0;
-			for(unsigned int k = 0; k < X.Alto(); k++)
-				val += t[i]*t[k]*X[k][j];
-			Y[i][j] = val;
-		}
-	}
-	return Y;
-}
 
 void Identificador::CentrarDividir(const Matriz& set, Matriz& X, Matriz& Xt){
 	//Esto es igual en ambos metodos
@@ -132,6 +114,12 @@ const Matriz& Identificador::cambioBase() const{
 const Matriz& Identificador::trainingSet() const{
 	return tSet;
 }
+
+
+const Vector& Identificador::AutoValores() const{
+	return autovalores;
+}
+
 
 int Identificador::kNN(const Vector& v) const{
 
