@@ -162,15 +162,10 @@ ostream& operator<<(ostream& os, const Matriz& B){
 	if( B.Alto() == 0 || B.Ancho() == 0 ){
 		os << "[ ]";
 	}else{
-		os << '[';
-		for( unsigned int i = 0 ; i < B.Alto()-1 ; i++){
+		for( unsigned int i = 0 ; i < B.Alto() ; i++){
 			os << B[i];
-			os << ',';
 			os << endl;
 		}
-		os << B[B.Alto()-1];
-		os << endl;
-		os << ']';
 	}
 	return os;
 }
