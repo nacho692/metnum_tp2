@@ -46,14 +46,14 @@ void testearKesimoFold(int fold, LevantaDatos& ld, int metodo){
 	// metodo 0 = PCA
 	// metodo 1 = PLS
 	
-	if (metodo) cout << "Preparando identificador para PLS-DA con los folds de training..." << endl;
+	if (!metodo) cout << "Preparando identificador para PLS-DA con los folds de training..." << endl;
 	else cout << "Preparando identificador para PCA con los folds de training..." << endl;
 
 	Matriz mt = ld.MatrizTraining();
 	Identificador id(ld.LabelsTraining(),ld.CantidadVecinos());
 
 	clock_t begin_seteo = clock();
-	if (metodo) id.PCA(mt, ld.Alpha());
+	if (!metodo) id.PCA(mt, ld.Alpha());
 	else id.PLS_DA(mt, ld.Gamma());
 	clock_t end_seteo = clock();
 
