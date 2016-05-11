@@ -1,7 +1,11 @@
 #include "modulos/identificador.h"
 #include "modulos/escupe_datos.h"
 #include "modulos/levanta_datos.h"
+#include <chrono>
 
+
+
+using namespace std::chrono;
 using namespace std;
 
 void testearTrainingSet(Identificador& id, LevantaDatos& ld, Matriz& matriz_confusion){
@@ -31,6 +35,35 @@ void testear(int fold, LevantaDatos& ld){
 	// EscupeDatos ep(nombre_salida, matriz_confusion);
 }
 
+void testAlphaPCA(unsigned int fold, LevantaDatos& ld, unsigned int iter){
+	cout << "Seteando " << fold << "-esimo fold..." << endl;
+	ld.SetearKesimoFold(fold);
+	Matriz mt = ld.MatrizTraining();
+	cout << "Tamaño training set: " << mt.Alto() << endl;
+
+	Identificador id(ld.LabelsTraining(),ld.CantidadVecinos());
+	
+	cout << "Alpha: " << 1 << endl;
+	for(unsigned int j = 0; j < iter; j++){
+		high_resolution_clock::time_point t1 = high_resolution_clock::now();
+		id.PCA(mt,1);
+		high_resolution_clock::time_point t2 = high_resolution_clock::now();
+		cout << duration_cast<microseconds>( t2 - t1 ).count()/1000 << ", "<<flush;
+	}
+	cout << endl;
+	for(unsigned int i = 56; i <= 784; i+=56 ){
+		cout << "Alpha: " << i << endl;
+		for(unsigned int j = 0; j < iter; j++){
+			high_resolution_clock::time_point t1 = high_resolution_clock::now();
+			id.PCA(mt,i);
+			high_resolution_clock::time_point t2 = high_resolution_clock::now();
+			cout << duration_cast<microseconds>( t2 - t1 ).count()/1000 << ", "<< flush;
+		}
+		cout << endl;
+	}
+
+}
+
 int main(int argc, char const *argv[]){ 
 	/* argv
 	nombre_entrada
@@ -43,8 +76,8 @@ int main(int argc, char const *argv[]){
 
 	cout << "Levantando datos..." << endl;
 	LevantaDatos ld(nombre_entrada);
-
-	testear(1, ld);
+	testAlphaPCA(0,ld,10);
+	//testear(1, ld);
 
 	return 0;
 }
