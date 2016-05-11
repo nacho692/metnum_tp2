@@ -13,7 +13,13 @@ using namespace std;
 
 class LevantaDatos{
 	private:
-		string file_path;
+		string input_file_path;
+		string output_file_path;			// el que va para kaggle
+		string confusion_file_path;			// el de la matriz de confusion
+		string hit_rates_file_path; 		// el de los hit rates
+		string ciclos_de_clock_file_path; 	// el de los ciclos
+		string autovalores_file_path;		// el de los autovectores
+
 		unsigned int cantidad_vecinos;
 		unsigned int alpha;
 		unsigned int gamma;
@@ -31,8 +37,9 @@ class LevantaDatos{
 		vector<int> labels_training;
 
 	public:
-		LevantaDatos(string input_file_name);
+		LevantaDatos(string input_file_name,string output_file_name);
 		void SetearKesimoFold(unsigned int k);
+		void EscribirResultados(int clocks_para_seteo_cambio_base, int clocks_para_reconocimiento,	Matriz matriz_confusion, vector<double> hit_rates);
 
 		string FilePath() const;
 		unsigned int CantidadVecinos() const;
