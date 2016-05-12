@@ -1,24 +1,94 @@
 import subprocess
 import os
 import random
+import numpy as np
+from cStringIO import StringIO 
+from crossVal import *
+from confusionPlot import *
+import operator
 
-tset = 784
-ks = random.sample(range(1, tset), 60)
-alphas = random.sample(range(1, 784), 60)
-gammas = random.sample(range(1, 784), 60)
+def grafico(i,K,alpha,gamma,vecino,ffile):
+	
+	txt = open('tests/'+ffile + '_matrices_confusion', 'r').read() 
 
-args = ["./tp", "test1.in"]
+	matrix = np.loadtxt(
+  		StringIO(txt.replace('[', '').replace("]", '')),
+  		delimiter=', ',
+  		dtype=int)
+	pca = np.zeros((K,10), dtype=int)
+	pls = np.zeros((K,10), dtype=int)
+	for i in range(0,K):
+		pca += matrix[i*20:i*20+10]
+		pls += matrix[i*20+10:i*20+10+10]
 
+	titulo = 'PCA\n' + 'Alpha: ' + str(alpha) + ' | ' +'Vecinos: ' + str(vecino) + ' | ' + 'Fold: ' + str(K)
+	gfile = 'pca_' + str(alpha) + '_' + str(vecino) + '_' + str(K)
+	plotConf(pca,titulo,'tests/paramTest/graph/' + gfile + '.png')
+	return
 
-popen = subprocess.Popen(args,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+def hitratePCA(nombre,K,traduccion):
+	#txt = open(nombre).read()
+	txt = open(nombre).read()
+	vector = np.loadtxt(StringIO(txt),
+				delimiter='\n',
+	      		dtype=float)
+	pca = np.empty(K)
+	for i in range(0,K):
+		pca[i] = vector[i*2]
+		
+	stdPCA = np.std(pca)
+	meanPCA = np.mean(pca)
+	
+	print 'Std PCA: ' + str(stdPCA) + ' | ' + 'Mean PCA: ' + str(meanPCA)
+	return (stdPCA,meanPCA,traduccion)
 
-out = popen.communicate()
+def hitratePLS(nombre,K,traduccion):
+	#txt = open(nombre).read()
+	txt = open(nombre).read()
+	vector = np.loadtxt(StringIO(txt),
+				delimiter='\n',
+	      		dtype=float)
+	pls = np.empty(K)
+	for i in range(0,K):
+		pls[i] = vector[i*2+1]
+		
+	stdPLS = np.std(pls)
+	meanPLS = np.mean(pls)
+	
+	print 'Std PLS: ' + str(stdPLS) + ' | ' + 'Mean PLS: ' + str(meanPLS)
+	return (stdPLS,meanPLS,traduccion)
 
-print out
+def paramTest(K,tSet = 42000, seed = 0):	
+	np.random.seed(seed)
+	alphas = np.random.choice(range(1,785), 60)
+	gammas = np.random.choice(range(1,100), 60)
+	vecinos = np.random.choice(range(1,tSet/K), 60)
+	hitsPCA = []
+	hitsPLS = []
+	for i in range(0,2):
+		print '--Eleccion: ' + str(i) + '--'
+		print 'Vecinos: ' + str(vecinos[i])
+		print 'Alpha: ' + str(alphas[i])
+		print 'Gamma: ' + str(gammas[i])
+		print 'Fold: ' + str(K)
+		# header = '../data/' + ' ' + str(vecino) + ' ' + str(alpha) + ' ' + str(gamma) + ' ' +str(K)
+		ffile = 'fold' + str(K) + '.in'
+		# kFold(header, tSet, K,'tests/'+ffile,seed)
+		
+		# 	args = ["./tp", ffile, "c", "b"]
+		# 	popen = subprocess.Popen(args,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		# out = popen.communicate()
 
-# print "Ks:"
-# print ks
-# print "Alphas:"
-# print alphas
-# print "Gammas:"
-# print gammas
+		grafico(i, K, alphas[i], gammas[i], vecinos[i],ffile)
+		hitsPCA.append(hitratePCA('tests/' + ffile + '_hit_rates',K,'i'+str(i)+'v'+str(vecinos[i])+'a'+str(alphas[i])+'f'+str(K)))
+		hitsPLS.append(hitratePLS('tests/' + ffile + '_hit_rates',K,'i'+str(i)+'v'+str(vecinos[i])+'g'+str(gammas[i])+'f'+str(K)))
+	hitsPCA.sort(key=operator.itemgetter(1))
+	print hitsPCA
+	hitsPLS.sort(key=operator.itemgetter(1))
+	print hitsPLS
+	return
+
+tSet = 42000
+seed= 0
+
+paramTest(10,tSet,seed)
