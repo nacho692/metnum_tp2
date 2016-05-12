@@ -2,7 +2,7 @@
 
 string INPUT_FILE_PATH = "tests/";
 
-LevantaDatos::LevantaDatos(string input_file_name){
+LevantaDatos::LevantaDatos(string input_file_name, string output_file_name){
 	// Levantar inputs
 	string line;
 	ifstream input_file(INPUT_FILE_PATH + input_file_name);
@@ -14,7 +14,7 @@ LevantaDatos::LevantaDatos(string input_file_name){
 		getline(input_file, line);
 		iss << line;
 		getline(iss, token,' ');
-		this->file_path = token + "train.csv";
+		this->input_file_path = token + "train.csv";
 		getline(iss, token,' ');
 		this->cantidad_vecinos = (unsigned int) stoi(token);
 		getline(iss, token,' ');
@@ -43,6 +43,33 @@ LevantaDatos::LevantaDatos(string input_file_name){
 	} else {
 		cout << "No se abre el input" << endl;
 	}
+
+	// Seteo los nombres de los archivos
+	this->output_file_path = INPUT_FILE_PATH + output_file_name;
+	this->confusion_file_path = INPUT_FILE_PATH + input_file_name + "_matrices_confusion";
+	this->hit_rates_file_path = INPUT_FILE_PATH + input_file_name + "_hit_rates";
+	this->ciclos_de_clock_file_path = INPUT_FILE_PATH + input_file_name + "_ciclos"; 	// el de los ciclos
+	this->autovalores_file_path = INPUT_FILE_PATH + input_file_name + "_autovalores";		// el de los autovectores
+
+
+	// Creo los archivos
+	ofstream ofs;
+
+	ofs.open(this->output_file_path, std::ofstream::out | std::ofstream::trunc);
+	ofs.close();
+
+	ofs.open(this->confusion_file_path, std::ofstream::out | std::ofstream::trunc);
+	ofs.close();
+
+	ofs.open(this->hit_rates_file_path, std::ofstream::out | std::ofstream::trunc);
+	ofs.close();
+
+	ofs.open(this->ciclos_de_clock_file_path, std::ofstream::out | std::ofstream::trunc);
+	ofs.close();
+
+	ofs.open(this->autovalores_file_path, std::ofstream::out | std::ofstream::trunc);
+	ofs.close();
+
 
 	// Setear los tamaños de matrices y vectores
 	this->digitos = Matriz(784, 42000);
@@ -112,8 +139,36 @@ void LevantaDatos::SetearKesimoFold(unsigned int k){
 	}
 }
 
+void LevantaDatos::EscribirResultados(const int clocks_para_seteo_cambio_base, const int clocks_para_reconocimiento, const Matriz& matriz_confusion, const Vector& hit_rates, const Vector& autovalores){
+	ofstream ofs_ciclos;
+	ofs_ciclos.open(this->ciclos_de_clock_file_path, std::ofstream::out | std::ofstream::app);
+	ofs_ciclos << clocks_para_seteo_cambio_base << " " << clocks_para_reconocimiento << endl;
+	ofs_ciclos.close();
+
+	ofstream ofs_confusion;
+	ofs_confusion.open(this->confusion_file_path, std::ofstream::out | std::ofstream::app);
+	ofs_confusion << matriz_confusion << endl;
+	ofs_confusion.close();
+
+	ofstream ofs_hit_rates;
+	ofs_hit_rates.open(this->hit_rates_file_path, std::ofstream::out | std::ofstream::app);
+	for (int i = 0; i < 10; i++){
+		ofs_hit_rates << hit_rates[i];
+	}
+	ofs_hit_rates << endl;
+	ofs_hit_rates.close();
+
+	ofstream ofs_autovalores;
+	ofs_autovalores.open(this->autovalores_file_path, std::ofstream::out | std::ofstream::app);
+	for (int i = 0; i < autovalores.Dimension(); i++){
+		ofs_autovalores << autovalores[i] << endl;
+	}
+	ofs_autovalores.close();
+
+}
+
 string LevantaDatos::FilePath() const{
-	return this->file_path;
+	return this->input_file_path;
 }
 
 unsigned int LevantaDatos::CantidadVecinos() const{
