@@ -139,7 +139,7 @@ void LevantaDatos::SetearKesimoFold(unsigned int k){
 	}
 }
 
-void LevantaDatos::EscribirResultados(int clocks_para_seteo_cambio_base, int clocks_para_reconocimiento,	Matriz matriz_confusion, vector<double> hit_rates){
+void LevantaDatos::EscribirResultados(const int clocks_para_seteo_cambio_base, const int clocks_para_reconocimiento, const Matriz& matriz_confusion, const Vector& hit_rates, const Vector& autovalores){
 	ofstream ofs_ciclos;
 	ofs_ciclos.open(this->ciclos_de_clock_file_path, std::ofstream::out | std::ofstream::app);
 	ofs_ciclos << clocks_para_seteo_cambio_base << " " << clocks_para_reconocimiento << endl;
@@ -151,12 +151,19 @@ void LevantaDatos::EscribirResultados(int clocks_para_seteo_cambio_base, int clo
 	ofs_confusion.close();
 
 	ofstream ofs_hit_rates;
-	ofs_hit_rates.open(this->hit_rates_file_path);
+	ofs_hit_rates.open(this->hit_rates_file_path, std::ofstream::out | std::ofstream::app);
 	for (int i = 0; i < 10; i++){
 		ofs_hit_rates << hit_rates[i];
 	}
 	ofs_hit_rates << endl;
 	ofs_hit_rates.close();
+
+	ofstream ofs_autovalores;
+	ofs_autovalores.open(this->autovalores_file_path, std::ofstream::out | std::ofstream::app);
+	for (int i = 0; i < autovalores.Dimension(); i++){
+		ofs_autovalores << autovalores[i] << endl;
+	}
+	ofs_autovalores.close();
 
 }
 

@@ -17,7 +17,7 @@ void imprmirVectorInt(vector<double>& v){
 	cout << v[v.size()-1] << "]" << endl;
 }
 
-void testearTrainingSet(Identificador& id, LevantaDatos& ld, Matriz& matriz_confusion, vector<double>& hit_rates, clock_t& clocks_para_fold){
+void testearTrainingSet(Identificador& id, LevantaDatos& ld, Matriz& matriz_confusion, Vector& hit_rates, clock_t& clocks_para_fold){
 	vector<int> cantidades(10);
 	for(unsigned int i = 0; i < ld.LabelsTesting().size(); i++){
 		int label =  ld.LabelsTesting()[i];
@@ -36,8 +36,7 @@ void testearTrainingSet(Identificador& id, LevantaDatos& ld, Matriz& matriz_conf
 		}
 	}	
 
-	for (int i = 0; i < 10; ++i)
-	{
+	for (int i = 0; i < 10; ++i){
 		hit_rates[i] = double(hit_rates[i]) / double(cantidades[i]);
 	}
 }
@@ -46,8 +45,8 @@ void testearKesimoFold(int fold, LevantaDatos& ld, int metodo){
 	// metodo 0 = PCA
 	// metodo 1 = PLS
 	
-	if (!metodo) cout << "Preparando identificador para PLS-DA con los folds de training..." << endl;
-	else cout << "Preparando identificador para PCA con los folds de training..." << endl;
+	if (!metodo) cout << "\tPreparando identificador para PLS-DA con los folds de training..." << endl;
+	else cout << "\tPreparando identificador para PCA con los folds de training..." << endl;
 
 	Matriz mt = ld.MatrizTraining();
 	Identificador id(ld.LabelsTraining(),ld.CantidadVecinos());
@@ -57,16 +56,16 @@ void testearKesimoFold(int fold, LevantaDatos& ld, int metodo){
 	else id.PLS_DA(mt, ld.Gamma());
 	clock_t end_seteo = clock();
 
-	int clocks_para_seteo_cambio_base = int (end_seteo - begin_seteo);
+	const int clocks_para_seteo_cambio_base = int (end_seteo - begin_seteo);
 
 	cout << "\tReconociendo dígitos del fold de testing..." << endl;
 	clock_t clocks_para_reconocimiento_temp = 0;
 	Matriz matriz_confusion(10, 10);
-	vector<double> hit_rates(10);
+	Vector hit_rates(10);
 	testearTrainingSet(id, ld, matriz_confusion, hit_rates, clocks_para_reconocimiento_temp);
-	int clocks_para_reconocimiento = (int) clocks_para_reconocimiento_temp;
+	const int clocks_para_reconocimiento = (const int) clocks_para_reconocimiento_temp;
 
-	ld.EscribirResultados(clocks_para_seteo_cambio_base, clocks_para_reconocimiento, matriz_confusion, hit_rates);
+	ld.EscribirResultados(clocks_para_seteo_cambio_base, clocks_para_reconocimiento, matriz_confusion, hit_rates, id.AutoValores());
 }
 
 void testAlphaPCA(unsigned int fold, LevantaDatos& ld, unsigned int iter){
@@ -114,14 +113,12 @@ int main(int argc, char const *argv[]){
 	LevantaDatos ld(nombre_entrada, nombre_salida);
 
 	for (int i = 0; i < ld.CantidadFolds(); i++){
-
 		cout << "Seteando " << i << "-esimo fold..." << endl;
-		cout << endl;
 		ld.SetearKesimoFold(i);
+		cout << "Testeando con PCA.." << endl;
 		testearKesimoFold(i, ld, 0);
-		cout << endl;
+		cout << "Testeando con PLS-DA.." << endl;
 		testearKesimoFold(i, ld, 1);
-		cout << endl;
 	}
 
 	return 0;

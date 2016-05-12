@@ -39,7 +39,7 @@ class LevantaDatos{
 	public:
 		LevantaDatos(string input_file_name,string output_file_name);
 		void SetearKesimoFold(unsigned int k);
-		void EscribirResultados(int clocks_para_seteo_cambio_base, int clocks_para_reconocimiento,	Matriz matriz_confusion, vector<double> hit_rates);
+		void EscribirResultados(const int clocks_para_seteo_cambio_base, const int clocks_para_reconocimiento, const Matriz& matriz_confusion, const Vector& hit_rates, const Vector& autovalores);
 
 		string FilePath() const;
 		unsigned int CantidadVecinos() const;
