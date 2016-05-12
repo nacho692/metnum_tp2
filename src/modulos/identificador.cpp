@@ -1,8 +1,8 @@
 #include "identificador.h"
 
-Identificador::Identificador( vector<int> clases, unsigned int cantidad_vecinos){
+Identificador::Identificador( vector<int> clases){
 	this->clases = clases;
-	this->cantidad_vecinos = cantidad_vecinos;
+//	this->cantidad_vecinos = cantidad_vecinos;
 //	this->gamma = gamma;
 //	this->alpha = alpha;
 }
@@ -35,7 +35,7 @@ void Identificador::PCA(const Matriz& set, unsigned int alpha){
 		autovalor =  mCovarianza.MetodoPotenciaNIteraciones( autovector, 10);
 		this->autovalores[i] = autovalor;
 		this->Vt[i] = autovector;
-		mDeflacion = Matriz( autovector, autovector * autovalor );
+		mDeflacion = Matriz( autovector, autovector *autovalor );
 		mCovarianza = mCovarianza - mDeflacion;
 	}
 	//Mi cambio de base Vt
@@ -121,7 +121,7 @@ const Vector& Identificador::AutoValores() const{
 }
 
 
-int Identificador::kNN(const Vector& v) const{
+int Identificador::kNN(const Vector& v, unsigned int kVecinos) const{
 
 	Vector vb = (v - this->medias)*(1/sqrt(tSet.Alto()-1));
 	//Cambio de base
@@ -139,7 +139,7 @@ int Identificador::kNN(const Vector& v) const{
 	make_heap(distancias.begin(),distancias.end(),cmpVecinoDistancia);
 
 	vector<Vecino> vecinos;
-	for(unsigned int i = 0; i < Cantidad_Vecinos(); i++){
+	for(unsigned int i = 0; i < kVecinos; i++){
 		pop_heap(distancias.begin(), distancias.end(),cmpVecinoDistancia);
 		vecinos.push_back(distancias[distancias.size()-1]);
 		distancias.pop_back();
@@ -172,9 +172,7 @@ unsigned int Identificador::Alpha()const{
 unsigned int Identificador::Gamma()const{
 	return this->gamma;
 }*/
-unsigned int Identificador::Cantidad_Vecinos()const{
-	return this->cantidad_vecinos;
-}
+
 const vector<int>& Identificador::Clases()const{
 	return this->clases;
 }

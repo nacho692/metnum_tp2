@@ -24,7 +24,7 @@ void testearTrainingSet(Identificador& id, LevantaDatos& ld, Matriz& matriz_conf
 		cantidades[label] ++;
 
 		clock_t begin_reconocimiento = clock();
-		int res = id.kNN(ld.MatrizTesting()[i]);
+		int res = id.kNN(ld.MatrizTesting()[i],ld.CantidadVecinos());
 		clock_t end_reconocimiento = clock();
 
 		clocks_para_fold = clocks_para_fold + end_reconocimiento - begin_reconocimiento;
@@ -49,7 +49,7 @@ void testearKesimoFold(int fold, LevantaDatos& ld, int metodo){
 	else cout << "\tPreparando identificador para PCA con los folds de training..." << endl;
 
 	Matriz mt = ld.MatrizTraining();
-	Identificador id(ld.LabelsTraining(),ld.CantidadVecinos());
+	Identificador id(ld.LabelsTraining());
 
 	clock_t begin_seteo = clock();
 	if (!metodo) id.PCA(mt, ld.Alpha());
@@ -68,13 +68,17 @@ void testearKesimoFold(int fold, LevantaDatos& ld, int metodo){
 	ld.EscribirResultados(clocks_para_seteo_cambio_base, clocks_para_reconocimiento, matriz_confusion, hit_rates, id.AutoValores());
 }
 
-void testAlphaPCA(unsigned int fold, LevantaDatos& ld, unsigned int iter){
+void testAlphaPCA(unsigned int fold, LevantaDatos& ld, unsigned int iter, unsigned int subSet){
 	cout << "Seteando " << fold << "-esimo fold..." << endl;
 	ld.SetearKesimoFold(fold);
-	Matriz mt = ld.MatrizTraining();
+	Matriz mt(ld.MatrizTraining().Ancho(), subSet);
+	for(unsigned int i; i < subSet; i++){
+		mt[i] = ld.MatrizTraining()[i];
+	}
+
 	cout << "Tamaño training set: " << mt.Alto() << endl;
 
-	Identificador id(ld.LabelsTraining(),ld.CantidadVecinos());
+	Identificador id(ld.LabelsTraining());
 	
 	cout << "Alpha: " << 1 << endl;
 	for(unsigned int j = 0; j < iter; j++){
@@ -97,6 +101,126 @@ void testAlphaPCA(unsigned int fold, LevantaDatos& ld, unsigned int iter){
 
 }
 
+void testGammaPLS(unsigned int fold, LevantaDatos& ld, unsigned int iter, unsigned int subSet){
+	cout << "Seteando " << fold << "-esimo fold..." << endl;
+	ld.SetearKesimoFold(fold);
+	
+	Matriz mt(ld.MatrizTraining().Ancho(), subSet);
+	for(unsigned int i; i < subSet; i++){
+		mt[i] = ld.MatrizTraining()[i];
+	}
+
+	cout << "Tamaño training set: " << mt.Alto() << endl;
+
+	Identificador id(ld.LabelsTraining());
+	
+	cout << "Gamma	: " << 1 << endl;
+	for(unsigned int j = 0; j < iter; j++){
+		high_resolution_clock::time_point t1 = high_resolution_clock::now();
+		id.PLS_DA(mt,1);
+		high_resolution_clock::time_point t2 = high_resolution_clock::now();
+		cout << duration_cast<microseconds>( t2 - t1 ).count()/1000 << ", "<<flush;
+	}
+	cout << endl;
+	for(unsigned int i = 56; i <= 784; i+=56 ){
+		cout << "Gamma: " << i << endl;
+		for(unsigned int j = 0; j < iter; j++){
+			high_resolution_clock::time_point t1 = high_resolution_clock::now();
+			id.PLS_DA(mt,i);
+			high_resolution_clock::time_point t2 = high_resolution_clock::now();
+			cout << duration_cast<microseconds>( t2 - t1 ).count()/1000 << ", "<< flush;
+		}
+		cout << endl;
+	}
+
+}
+
+void testVecinosPCA(unsigned int fold, LevantaDatos& ld, unsigned int iter, unsigned int subSet){
+		cout << "Seteando " << fold << "-esimo fold..." << endl;
+	ld.SetearKesimoFold(fold);
+	
+	Matriz mt(ld.MatrizTraining().Ancho(), subSet);
+	for(unsigned int i; i < subSet; i++){
+		mt[i] = ld.MatrizTraining()[i];
+	}
+
+	cout << "Tamaño training set: " << mt.Alto() << endl;
+
+	Identificador id(ld.LabelsTraining());
+	
+	id.PCA(mt,50);
+	cout << "Setup Completo" << endl;
+
+	for(unsigned int i = 1; i <= mt.Alto(); i+= 50){
+		cout << "Vecinos: " << i << endl;
+		for(unsigned int j = 0; j < iter; j++){
+			high_resolution_clock::time_point t1 = high_resolution_clock::now();
+			id.kNN(ld.MatrizTesting()[0],i);
+			high_resolution_clock::time_point t2 = high_resolution_clock::now();
+			cout << duration_cast<microseconds>( t2 - t1 ).count()/1000 << ", "<< flush;
+		}
+		cout << endl;
+	}
+}
+
+
+void testVecinosPLS(unsigned int fold, LevantaDatos& ld, unsigned int iter, unsigned int subSet){
+	cout << "Seteando " << fold << "-esimo fold..." << endl;
+	ld.SetearKesimoFold(fold);
+	
+	Matriz mt(ld.MatrizTraining().Ancho(), subSet);
+	for(unsigned int i; i < subSet; i++){
+		mt[i] = ld.MatrizTraining()[i];
+	}
+
+	cout << "Tamaño training set: " << mt.Alto() << endl;
+
+	Identificador id(ld.LabelsTraining());
+	
+	id.PLS_DA(mt,50);
+	cout << "Setup Completo" << endl;
+
+	for(unsigned int i = 1; i <= mt.Alto(); i+= 50){
+		cout << "Vecinos: " << i << endl;
+		for(unsigned int j = 0; j < iter; j++){
+			high_resolution_clock::time_point t1 = high_resolution_clock::now();
+			id.kNN(ld.MatrizTesting()[0],i);
+			high_resolution_clock::time_point t2 = high_resolution_clock::now();
+			cout << duration_cast<microseconds>( t2 - t1 ).count()/1000 << ", "<< flush;
+		}
+		cout << endl;
+	}
+}
+
+void testVecinosSinMetodo(unsigned int fold, LevantaDatos& ld, unsigned int iter, unsigned int subSet){
+	cout << "Seteando " << fold << "-esimo fold..." << endl;
+	ld.SetearKesimoFold(fold);
+	
+	Matriz mt(ld.MatrizTraining().Ancho(), subSet);
+	for(unsigned int i; i < subSet; i++){
+		mt[i] = ld.MatrizTraining()[i];
+	}
+
+	cout << "Tamaño training set: " << mt.Alto() << endl;
+
+	Identificador id(ld.LabelsTraining());
+	
+	id.SinMetodo(mt);
+	cout << "Setup Completo" << endl;
+
+	for(unsigned int i = 1; i <= mt.Alto(); i+= 50){
+		cout << "Vecinos: " << i << endl;
+		for(unsigned int j = 0; j < iter; j++){
+			high_resolution_clock::time_point t1 = high_resolution_clock::now();
+			id.kNN(ld.MatrizTesting()[0],i);
+			high_resolution_clock::time_point t2 = high_resolution_clock::now();
+			cout << duration_cast<microseconds>( t2 - t1 ).count()/1000 << ", "<< flush;
+		}
+		cout << endl;
+	}
+}
+
+
 int main(int argc, char const *argv[]){ 
 	/* argv
 	nombre_entrada
@@ -108,7 +232,14 @@ int main(int argc, char const *argv[]){
 	string metodo_a_utilizar(argv[3]);
 
 	cout << "Levantando datos..." << endl;
-	cout << endl;
+	//LevantaDatos ld(nombre_entrada, nombre_salida);
+	//testGammaPLS(0,ld,10,20000);
+	//testAlphaPCA(0,ld,10,20000);
+	//testVecinosPLS(0,ld,10,20000);
+	//testVecinosPCA(0,ld,10,20000);
+	//testVecinosSinMetodo(0,ld,10,20000);
+	//testear(1, ld);
+	//cout << endl;
 
 	LevantaDatos ld(nombre_entrada, nombre_salida);
 
@@ -120,6 +251,5 @@ int main(int argc, char const *argv[]){
 		cout << "Testeando con PLS-DA.." << endl;
 		testearKesimoFold(i, ld, 1);
 	}
-
 	return 0;
 }
