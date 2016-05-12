@@ -8,7 +8,7 @@
 
 class Identificador{
 	private:
-		unsigned int cantidad_vecinos;
+		//unsigned int cantidad_vecinos;
 		//unsigned int alpha;
 		//unsigned int gamma;
 		Matriz tSet;
@@ -39,14 +39,14 @@ class Identificador{
 		void CentrarDividir(const Matriz& set, Matriz& X, Matriz& Xt);
 		Matriz VectorMatriz(const Vector& t, const Matriz& X) const;
 	public:
-		Identificador( vector<int> clases, unsigned int cantidad_vecinos);
+		Identificador( vector<int> clases);
 
 		//Tienen que modificar tSet y Vt ambas
 		void PCA(const Matriz& set, unsigned int alpha);
 		void PLS_DA(const Matriz& set, unsigned int gamma);
 		void SinMetodo(const Matriz& set);
 
-		int kNN(const Vector& v) const;
+		int kNN(const Vector& v,unsigned int kVecinos) const;
 		//Getters
 		const Matriz& trainingSet() const;
 		const Matriz& cambioBase() const;
