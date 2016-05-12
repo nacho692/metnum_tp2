@@ -35,7 +35,7 @@ void Identificador::PCA(const Matriz& set, unsigned int alpha){
 		autovalor =  mCovarianza.MetodoPotenciaNIteraciones( autovector, 10);
 		this->autovalores[i] = autovalor;
 		this->Vt[i] = autovector;
-		mDeflacion = Matriz( autovector, autovector * autovalor );
+		mDeflacion = Matriz( autovector, autovector *autovalor );
 		mCovarianza = mCovarianza - mDeflacion;
 	}
 	//Mi cambio de base Vt
