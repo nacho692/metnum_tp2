@@ -277,16 +277,17 @@ int main(int argc, char const *argv[]){
 	cout << "    Gamma : " << ld.Gamma() << endl;
 	cout << "    Cantidad fold : " << ld.CantidadFolds() << endl;
 
-	ld.SetearKesimoFold(1);
+/*	ld.SetearKesimoFold(1);
 	testearKesimoFold(1, ld, 0);
+*/
+	for (int i = 0; i < ld.CantidadFolds(); i++){
+	 	cout << "Seteando " << i << "-esimo fold..." << endl;
+	 	ld.SetearKesimoFold(i);
+	 	cout << "Testeando con PCA..." << endl;
+	 	testearKesimoFold(i, ld, 0);
+	 	cout << "Testeando con PLS-DA..." << endl;
+		testearKesimoFold(i, ld, 1);
+	}
 
-	// for (int i = 0; i < ld.CantidadFolds(); i++){
-	// 	cout << "Seteando " << i << "-esimo fold..." << endl;
-	// 	ld.SetearKesimoFold(i);
-	// 	cout << "Testeando con PCA..." << endl;
-	// 	testearKesimoFold(i, ld, 0);
-	// 	cout << "Testeando con PLS-DA..." << endl;
-	// 	testearKesimoFold(i, ld, 1);
-	// }
 	return 0;
 }
