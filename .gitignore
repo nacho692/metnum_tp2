@@ -21,3 +21,8 @@ src/data
 src/modulos/escupe_datos.o
 src/utils/knn.o
 src/utils/digito.o
+src/tests/test1.in_autovalores
+src/tests/test1.in_ciclos
+src/tests/test1.in_hit_rates
+src/tests/test1.in_matrices_confusion
+src/tests/test1.out
