@@ -21,3 +21,15 @@ src/data
 src/modulos/escupe_datos.o
 src/utils/knn.o
 src/utils/digito.o
+src/tests/test1.in_autovalores
+src/tests/test1.in_ciclos
+src/tests/test1.in_hit_rates
+src/tests/test1.in_matrices_confusion
+src/tests/test1.out
+src/scripts/tptests.pyc
+src/tests/asd
+src/tests/fold10.in
+src/tests/fold10.in_autovalores
+src/tests/fold10.in_ciclos
+src/tests/fold10.in_hit_rates
+src/tests/fold10.in_matrices_confusion
