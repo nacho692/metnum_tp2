@@ -7,18 +7,23 @@
 using namespace std::chrono;
 using namespace std;
 
-void imprmirVectorInt(vector<double>& v){
+void imprmirVectorInt(Vector& v){
 	cout << "[";
 
-	for (int i = 0; i < v.size()-1; i++){
+	for (int i = 0; i < v.Dimension()-1; i++){
 		cout << v[i] << ", ";
 	}
 
-	cout << v[v.size()-1] << "]" << endl;
+	cout << v[v.Dimension()-1] << "]" << endl;
 }
 
 void testearTrainingSet(Identificador& id, LevantaDatos& ld, Matriz& matriz_confusion, Vector& hit_rates, clock_t& clocks_para_fold){
-	vector<int> cantidades(10);
+	Vector cantidades(10);
+
+	Vector verdaderos_positivos(10);
+	Vector falsos_positivos(10);
+	Vector falsos_negativos(10);
+
 	for(unsigned int i = 0; i < ld.LabelsTesting().size(); i++){
 		int label =  ld.LabelsTesting()[i];
 		cantidades[label] ++;
@@ -26,34 +31,58 @@ void testearTrainingSet(Identificador& id, LevantaDatos& ld, Matriz& matriz_conf
 		clock_t begin_reconocimiento = clock();
 		int res = id.kNN(ld.MatrizTesting()[i],ld.CantidadVecinos());
 		clock_t end_reconocimiento = clock();
-
 		clocks_para_fold = clocks_para_fold + end_reconocimiento - begin_reconocimiento;
 		
-
 		matriz_confusion[res][label]++;
 		if (res == label){
 			hit_rates[label]++;
+			verdaderos_positivos[label]++;
+		} else {
+			falsos_positivos[res]++;
+			falsos_negativos[label]++;
 		}
+
 	}	
 
+	Vector precision(10);
+	Vector recall(10);
+
 	for (int i = 0; i < 10; ++i){
-		hit_rates[i] = double(hit_rates[i]) / double(cantidades[i]);
+		hit_rates[i] = hit_rates[i] / cantidades[i];
+		precision[i] = verdaderos_positivos[i] / (verdaderos_positivos[i] + falsos_positivos[i]);
+		recall[i] = verdaderos_positivos[i] / (verdaderos_positivos[i] + falsos_negativos[i]);
 	}
+
+	cout << "cantidades" << endl;
+	imprmirVectorInt(cantidades);
+	cout << "verdaderos_positivos" << endl;
+	imprmirVectorInt(verdaderos_positivos);
+	cout << "falsos_negativos" << endl;
+	imprmirVectorInt(falsos_negativos);
+	cout << "falsos_positivos" << endl;
+	imprmirVectorInt(falsos_positivos);
+	cout << "Precision" << endl;
+	imprmirVectorInt(precision);
+	cout << "Recall" << endl;
+	imprmirVectorInt(recall);
 }
 
 void testearKesimoFold(int fold, LevantaDatos& ld, int metodo){
 	// metodo 0 = PCA
 	// metodo 1 = PLS
 	
-	if (!metodo) cout << "\tPreparando identificador para PLS-DA con los folds de training..." << endl;
+	if (metodo) cout << "\tPreparando identificador para PLS-DA con los folds de training..." << endl;
 	else cout << "\tPreparando identificador para PCA con los folds de training..." << endl;
 
 	Matriz mt = ld.MatrizTraining();
 	Identificador id(ld.LabelsTraining());
 
 	clock_t begin_seteo = clock();
-	if (!metodo) id.PCA(mt, ld.Alpha());
-	else id.PLS_DA(mt, ld.Gamma());
+	if (metodo){
+		id.PLS_DA(mt, ld.Gamma());
+	} else {
+		id.PCA(mt, ld.Alpha());
+	}
 	clock_t end_seteo = clock();
 
 	const int clocks_para_seteo_cambio_base = int (end_seteo - begin_seteo);
@@ -243,13 +272,21 @@ int main(int argc, char const *argv[]){
 
 	LevantaDatos ld(nombre_entrada, nombre_salida);
 
-	for (int i = 0; i < ld.CantidadFolds(); i++){
-		cout << "Seteando " << i << "-esimo fold..." << endl;
-		ld.SetearKesimoFold(i);
-		cout << "Testeando con PCA.." << endl;
-		testearKesimoFold(i, ld, 0);
-		cout << "Testeando con PLS-DA.." << endl;
-		testearKesimoFold(i, ld, 1);
-	}
+	cout << "    Cantidad vecinos : " << ld.CantidadVecinos() << endl;
+	cout << "    Alpha : " << ld.Alpha() << endl;
+	cout << "    Gamma : " << ld.Gamma() << endl;
+	cout << "    Cantidad fold : " << ld.CantidadFolds() << endl;
+
+	ld.SetearKesimoFold(1);
+	testearKesimoFold(1, ld, 0);
+
+	// for (int i = 0; i < ld.CantidadFolds(); i++){
+	// 	cout << "Seteando " << i << "-esimo fold..." << endl;
+	// 	ld.SetearKesimoFold(i);
+	// 	cout << "Testeando con PCA..." << endl;
+	// 	testearKesimoFold(i, ld, 0);
+	// 	cout << "Testeando con PLS-DA..." << endl;
+	// 	testearKesimoFold(i, ld, 1);
+	// }
 	return 0;
 }

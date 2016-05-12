@@ -4,6 +4,21 @@ string INPUT_FILE_PATH = "tests/";
 
 LevantaDatos::LevantaDatos(string input_file_name, string output_file_name){
 	// Levantar inputs
+
+	stringstream asd1;
+	asd1 << input_file_name;
+	string qwe1;
+	getline(asd1, qwe1, '/');
+	getline(asd1, qwe1, '/');
+	input_file_name = qwe1;
+
+	stringstream asd2;
+	asd2 << output_file_name;
+	string qwe2;
+	getline(asd2, qwe2, '/');
+	getline(asd2, qwe2, '/');
+	input_file_name = qwe1;
+
 	string line;
 	ifstream input_file(INPUT_FILE_PATH + input_file_name);
 
@@ -121,6 +136,7 @@ void LevantaDatos::SetearKesimoFold(unsigned int k){
 	vector<unsigned int> fold = this->folds[k];
 	unsigned int indice_testing = 0;
 	unsigned int indice_training = 0;
+
 	for (unsigned int i = 0; i < this->digitos.Alto(); i++){
 		unsigned int j;
 		if (fold[i]){ // Si es para training
@@ -153,7 +169,7 @@ void LevantaDatos::EscribirResultados(const int clocks_para_seteo_cambio_base, c
 	ofstream ofs_hit_rates;
 	ofs_hit_rates.open(this->hit_rates_file_path, std::ofstream::out | std::ofstream::app);
 	for (int i = 0; i < 10; i++){
-		ofs_hit_rates << hit_rates[i];
+		ofs_hit_rates << hit_rates[i] << " ";
 	}
 	ofs_hit_rates << endl;
 	ofs_hit_rates.close();
