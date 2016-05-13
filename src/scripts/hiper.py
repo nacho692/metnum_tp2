@@ -60,9 +60,12 @@ def hitratePLS(nombre,K,traduccion):
 
 def paramTest(K,tSet = 42000, seed = 0):	
 	np.random.seed(seed)
-	alphas = np.random.choice(range(1,785), 60)
-	gammas = np.random.choice(range(1,100), 60)
-	vecinos = np.random.choice(range(1,tSet/K), 60)
+	alphas = np.random.choice(range(1,100), 60)
+	gammas = np.random.choice(range(1,50), 60)
+	# vecinos = np.random.choice(range(1,tSet/K), 60)
+	vecinos = np.random.choice(range(1,50), 60)
+	gammas[0] = 5
+	gammas[1] = 6
 	hitsPCA = []
 	hitsPLS = []
 	for i in range(0,2):
@@ -71,21 +74,25 @@ def paramTest(K,tSet = 42000, seed = 0):
 		print 'Alpha: ' + str(alphas[i])
 		print 'Gamma: ' + str(gammas[i])
 		print 'Fold: ' + str(K)
-		# header = '../data/' + ' ' + str(vecino) + ' ' + str(alpha) + ' ' + str(gamma) + ' ' +str(K)
+		header = '../data/' + ' ' + str(vecinos[i]) + ' ' + str(alphas[i]) + ' ' + str(gammas[i]) + ' ' +str(K)
 		ffile = 'fold' + str(K) + '.in'
-		# kFold(header, tSet, K,'tests/'+ffile,seed)
+		kFold(header, tSet, K,'tests/'+ffile,seed)
 		
-		# 	args = ["./tp", ffile, "c", "b"]
-		# 	popen = subprocess.Popen(args,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		# out = popen.communicate()
-
+		args = ["./tp", ffile, "c", "b"]
+		popen = subprocess.Popen(args,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		out = popen.communicate()
 		grafico(i, K, alphas[i], gammas[i], vecinos[i],ffile)
 		hitsPCA.append(hitratePCA('tests/' + ffile + '_hit_rates',K,'i'+str(i)+'v'+str(vecinos[i])+'a'+str(alphas[i])+'f'+str(K)))
 		hitsPLS.append(hitratePLS('tests/' + ffile + '_hit_rates',K,'i'+str(i)+'v'+str(vecinos[i])+'g'+str(gammas[i])+'f'+str(K)))
 	hitsPCA.sort(key=operator.itemgetter(1))
-	print hitsPCA
+	with open('tests/paramTest/PCA', 'w') as f:
+	    for i in hitsPCA:
+			f.write(str(i) + '\n')
+		
 	hitsPLS.sort(key=operator.itemgetter(1))
-	print hitsPLS
+	with open('tests/paramTest/PLS', 'w') as f:
+	    for j in hitsPLS:
+			f.write(str(j) + '\n')
 	return
 
 tSet = 42000
