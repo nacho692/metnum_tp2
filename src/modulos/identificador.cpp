@@ -151,6 +151,7 @@ int Identificador::kNN(const Vector& v, unsigned int kVecinos) const{
 	}
 
 	//Ordenamos para juntar cada clase y asi sacar el voto calificado mas facil (no tengo acentos)
+
 	vector<double> votos(10);
 	for(unsigned int i = 0; i < vecinos.size(); i++){
 		votos[vecinos[i].clase] += 1/vecinos[i].distancia;
@@ -159,10 +160,11 @@ int Identificador::kNN(const Vector& v, unsigned int kVecinos) const{
 	double maxV = 0;
 	for(unsigned int i = 0; i < votos.size(); i++){
 		if(votos[i] > maxV){
+			maxV = votos[i];
 			maxD = i;
-			maxV = maxD;
 		}
 	}
+
 	return maxD;
 }
 /*

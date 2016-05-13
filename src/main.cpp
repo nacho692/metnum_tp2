@@ -35,7 +35,7 @@ void testearTrainingSet(Identificador& id, LevantaDatos& ld, Matriz& matriz_conf
 		clock_t end_reconocimiento = clock();
 		clocks_para_fold = clocks_para_fold + end_reconocimiento - begin_reconocimiento;
 		
-		matriz_confusion[res][label]++;
+		matriz_confusion[label][res]++;
 		if (res == label){
 			hit_rate++;
 			verdaderos_positivos[label]++;
@@ -44,9 +44,7 @@ void testearTrainingSet(Identificador& id, LevantaDatos& ld, Matriz& matriz_conf
 			falsos_negativos[label]++;
 		}
 
-	}	
-	cout << "asdaasd " << hit_rate << endl;
-	cout << "asdaasd " << cantidad << endl;
+	}
 
 
 	hit_rate = hit_rate / cantidad;
@@ -276,7 +274,7 @@ int main(int argc, char const *argv[]){
 	 	cout << "Seteando " << i << "-esimo fold..." << endl;
 	 	ld.SetearKesimoFold(i);
 	 	cout << "Testeando con PCA..." << endl;
-	 	testearKesimoFold(i, ld, 0);
+	 	//testearKesimoFold(i, ld, 0);
 	 	cout << "Testeando con PLS-DA..." << endl;
 		testearKesimoFold(i, ld, 1);
 	}
