@@ -33,3 +33,5 @@ src/tests/fold10.in_autovalores
 src/tests/fold10.in_ciclos
 src/tests/fold10.in_hit_rates
 src/tests/fold10.in_matrices_confusion
+src/tests/test1.in_precision
+src/tests/test1.in_recall

@@ -19,6 +19,9 @@ class LevantaDatos{
 		string hit_rates_file_path; 		// el de los hit rates
 		string ciclos_de_clock_file_path; 	// el de los ciclos
 		string autovalores_file_path;		// el de los autovectores
+		string recall_file_path;
+		string precision_file_path;
+		string f1_file_path;
 
 		unsigned int cantidad_vecinos;
 		unsigned int alpha;
@@ -38,7 +41,7 @@ class LevantaDatos{
 	public:
 		LevantaDatos(string input_file_name,string output_file_name);
 		void SetearKesimoFold(unsigned int k);
-		void EscribirResultados(const int clocks_para_seteo_cambio_base, const int clocks_para_reconocimiento, const Matriz& matriz_confusion, const Vector& hit_rates, const Vector& autovalores);
+		void EscribirResultados(const int clocks_para_seteo_cambio_base, const int clocks_para_reconocimiento, const Matriz& matriz_confusion, const double& hit_rate, const Vector& autovalores, const Vector& precision, const Vector& recall);
 
 		string FilePath() const;
 		unsigned int CantidadVecinos() const;

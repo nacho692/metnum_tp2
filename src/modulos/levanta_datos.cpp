@@ -65,6 +65,9 @@ LevantaDatos::LevantaDatos(string input_file_name, string output_file_name){
 	this->hit_rates_file_path = INPUT_FILE_PATH + input_file_name + "_hit_rates";
 	this->ciclos_de_clock_file_path = INPUT_FILE_PATH + input_file_name + "_ciclos"; 	// el de los ciclos
 	this->autovalores_file_path = INPUT_FILE_PATH + input_file_name + "_autovalores";		// el de los autovectores
+	this->recall_file_path = INPUT_FILE_PATH + input_file_name + "_recall";		// el de los autovectores
+	this->precision_file_path = INPUT_FILE_PATH + input_file_name + "_precision";		// el de los autovectores
+	this->f1_file_path = INPUT_FILE_PATH + input_file_name + "_f1";		// el de los autovectores
 
 
 	// Creo los archivos
@@ -155,7 +158,7 @@ void LevantaDatos::SetearKesimoFold(unsigned int k){
 	}
 }
 
-void LevantaDatos::EscribirResultados(const int clocks_para_seteo_cambio_base, const int clocks_para_reconocimiento, const Matriz& matriz_confusion, const Vector& hit_rates, const Vector& autovalores){
+void LevantaDatos::EscribirResultados(const int clocks_para_seteo_cambio_base, const int clocks_para_reconocimiento, const Matriz& matriz_confusion, const double& hit_rate, const Vector& autovalores, const Vector& precision, const Vector& recall){
 	ofstream ofs_ciclos;
 	ofs_ciclos.open(this->ciclos_de_clock_file_path, std::ofstream::out | std::ofstream::app);
 	ofs_ciclos << clocks_para_seteo_cambio_base << " " << clocks_para_reconocimiento << endl;
@@ -168,10 +171,7 @@ void LevantaDatos::EscribirResultados(const int clocks_para_seteo_cambio_base, c
 
 	ofstream ofs_hit_rates;
 	ofs_hit_rates.open(this->hit_rates_file_path, std::ofstream::out | std::ofstream::app);
-	for (int i = 0; i < 10; i++){
-		ofs_hit_rates << hit_rates[i] << " ";
-	}
-	ofs_hit_rates << endl;
+	ofs_hit_rates << hit_rate << endl;
 	ofs_hit_rates.close();
 
 	ofstream ofs_autovalores;
@@ -180,6 +180,22 @@ void LevantaDatos::EscribirResultados(const int clocks_para_seteo_cambio_base, c
 		ofs_autovalores << autovalores[i] << endl;
 	}
 	ofs_autovalores.close();
+
+	ofstream ofs_precision;
+	ofs_precision.open(this->precision_file_path, std::ofstream::out | std::ofstream::app);
+	for (int i = 0; i < 10; i++){
+		ofs_precision << precision[i] << " ";
+	}
+	ofs_precision << endl;
+	ofs_precision.close();
+
+	ofstream ofs_recall;
+	ofs_recall.open(this->recall_file_path, std::ofstream::out | std::ofstream::app);
+	for (int i = 0; i < 10; i++){
+		ofs_recall << recall[i] << " ";
+	}
+	ofs_recall << endl;
+	ofs_recall.close();
 
 }
 
