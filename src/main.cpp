@@ -87,6 +87,73 @@ void testearKesimoFold(int fold, LevantaDatos& ld, int metodo){
 	ld.EscribirResultados(clocks_para_seteo_cambio_base, clocks_para_reconocimiento, matriz_confusion, hit_rate, id.AutoValores(), precision, recall);
 }
 
+void testearTrainingSetVecinos(Identificador& id, LevantaDatos& ld, int cantidad_vecinos, Matriz& matriz_confusion, double& hit_rate, Vector& precision, Vector& recall){
+	Vector cantidades(10);
+	double cantidad = 0;
+
+	Vector verdaderos_positivos(10);
+	Vector falsos_positivos(10);
+	Vector falsos_negativos(10);
+
+	for(unsigned int i = 0; i < ld.LabelsTesting().size(); i++){
+		int label =  ld.LabelsTesting()[i];
+		cantidades[label] ++;
+		cantidad++;
+
+		int res = id.kNN(ld.MatrizTesting()[i], cantidad_vecinos);
+		
+		matriz_confusion[label][res]++;
+		if (res == label){
+			hit_rate++;
+			verdaderos_positivos[label]++;
+		} else {
+			falsos_positivos[res]++;
+			falsos_negativos[label]++;
+		}
+
+	}
+
+
+	hit_rate = hit_rate / cantidad;
+
+	for (int i = 0; i < 10; ++i){
+		precision[i] = verdaderos_positivos[i] / (verdaderos_positivos[i] + falsos_positivos[i]);
+		recall[i] = verdaderos_positivos[i] / (verdaderos_positivos[i] + falsos_negativos[i]);
+	}
+}
+
+void testearFoldVecinos(LevantaDatos& ld, Vector vecinos, Vector alphas, Vector gammas){
+	// metodo 0 = PCA
+	// metodo 1 = PLS
+
+	for (int k = 0; k < 2; k++){
+		for(int i = 0; i < alphas.Dimension(); i++){
+			if (!k) cout << "\tPreparando identificador para PCA para alpha " << alphas[i] << "..." << endl;
+			else cout << "\tPreparando identificador para PLS-DA para gamma " << gammas[i] << "..." << endl;
+
+			Matriz mt = ld.MatrizTraining();
+			Identificador id(ld.LabelsTraining());
+			if (!k) id.PCA(mt, alphas[i]);
+			else id.PLS_DA(mt, gammas[i]);
+
+			for(int j = 0; j < vecinos.Dimension(); j++ ){
+				cout << "\tReconociendo dígitos del fold de testing para " << vecinos[j] << "vecinos..." << endl;
+
+				Matriz matriz_confusion(10, 10);
+				double hit_rate = 0;
+				Vector precision(10);
+				Vector recall(10);
+
+				testearTrainingSetVecinos(id, ld, vecinos[j], matriz_confusion, hit_rate, precision, recall);
+				cout << "Alpha : " << alphas[i] << endl;
+				cout << "Gamma : " << gammas[i] << endl;
+				cout << "Cantidad de vecinos : " << vecinos[j] << endl;
+				cout << "Hitrate : " << hit_rate << endl;
+			}
+		}
+	}
+}
+
 void testAlphaPCA(unsigned int fold, LevantaDatos& ld, unsigned int iter, unsigned int subSet){
 	cout << "Seteando " << fold << "-esimo fold..." << endl;
 	ld.SetearKesimoFold(fold);
@@ -239,6 +306,63 @@ void testVecinosSinMetodo(unsigned int fold, LevantaDatos& ld, unsigned int iter
 	}
 }
 
+void testVecinos(LevantaDatos& ld){
+	cout << "Bienvenido al tests de vecinos" << endl;
+
+	cout << "    Cantidad de folds : " << ld.CantidadFolds() << endl;
+
+	Vector alphas;
+	alphas.Agregar(20);
+	alphas.Agregar(40);
+	alphas.Agregar(60);
+	alphas.Agregar(80);
+
+	Vector gammas;
+	gammas.Agregar(15);
+	gammas.Agregar(25);
+	gammas.Agregar(35);
+	gammas.Agregar(45);
+
+	Vector vecinos;
+	vecinos.Agregar(2);
+	vecinos.Agregar(3);
+	vecinos.Agregar(4);
+	vecinos.Agregar(5);
+	vecinos.Agregar(6);
+	vecinos.Agregar(7);
+	vecinos.Agregar(8);
+	vecinos.Agregar(9);
+	vecinos.Agregar(10);
+	vecinos.Agregar(15);
+	vecinos.Agregar(50);
+	vecinos.Agregar(100);
+	vecinos.Agregar(1000);
+	vecinos.Agregar(10000);
+	vecinos.Agregar(37000);
+
+	imprmirVectorInt(vecinos);
+
+	for(int i = 0; i < ld.CantidadFolds(); i++){
+		ld.SetearKesimoFold(i);
+		testearFoldVecinos(ld, vecinos, alphas, gammas);
+	}
+}
+
+void testGeneral(LevantaDatos& ld){
+	cout << "    Cantidad vecinos : " << ld.CantidadVecinos() << endl;
+	cout << "    Alpha : " << ld.Alpha() << endl;
+	cout << "    Gamma : " << ld.Gamma() << endl;
+	cout << "    Cantidad fold : " << ld.CantidadFolds() << endl;
+
+	for (int i = 0; i < ld.CantidadFolds(); i++){
+	 	cout << "Seteando " << i << "-esimo fold..." << endl;
+	 	ld.SetearKesimoFold(i);
+	 	cout << "Testeando con PCA..." << endl;
+	 	testearKesimoFold(i, ld, 0);
+	 	cout << "Testeando con PLS-DA..." << endl;
+		testearKesimoFold(i, ld, 1);
+	}	
+}
 
 int main(int argc, char const *argv[]){ 
 	/* argv
@@ -247,37 +371,20 @@ int main(int argc, char const *argv[]){
 	metodo_a_utilizar	(0: kNN , 1: PCA + kNN ,2: PLS-DA + kNN)
 	*/
 	string nombre_entrada(argv[1]);
-	string nombre_salida(argv[2]);		// En este voy a escribir los autovalores
+	string nombre_salida(argv[2]);
 	string metodo_a_utilizar(argv[3]);
 
 	cout << "Levantando datos..." << endl;
-	//LevantaDatos ld(nombre_entrada, nombre_salida);
-	//testGammaPLS(0,ld,10,20000);
-	//testAlphaPCA(0,ld,10,20000);
-	//testVecinosPLS(0,ld,10,20000);
-	//testVecinosPCA(0,ld,10,20000);
-	//testVecinosSinMetodo(0,ld,10,20000);
-	//testear(1, ld);
-	//cout << endl;
 
 	LevantaDatos ld(nombre_entrada, nombre_salida);
+	// testGammaPLS(0,ld,10,20000);
+	// testAlphaPCA(0,ld,10,20000);
+	// testVecinosPLS(0,ld,10,20000);
+	// testVecinosPCA(0,ld,10,20000);
+	// testVecinosSinMetodo(0,ld,10,20000);
+	// testGeneral(ld);
 
-	cout << "    Cantidad vecinos : " << ld.CantidadVecinos() << endl;
-	cout << "    Alpha : " << ld.Alpha() << endl;
-	cout << "    Gamma : " << ld.Gamma() << endl;
-	cout << "    Cantidad fold : " << ld.CantidadFolds() << endl;
-
-/*	ld.SetearKesimoFold(1);
-	testearKesimoFold(1, ld, 0);
-*/
-	for (int i = 0; i < ld.CantidadFolds(); i++){
-	 	cout << "Seteando " << i << "-esimo fold..." << endl;
-	 	ld.SetearKesimoFold(i);
-	 	cout << "Testeando con PCA..." << endl;
-	 	//testearKesimoFold(i, ld, 0);
-	 	cout << "Testeando con PLS-DA..." << endl;
-		testearKesimoFold(i, ld, 1);
-	}
+	testVecinos(ld);
 
 	return 0;
 }

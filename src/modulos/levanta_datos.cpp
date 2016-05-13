@@ -17,7 +17,7 @@ LevantaDatos::LevantaDatos(string input_file_name, string output_file_name){
 	string qwe2;
 	getline(asd2, qwe2, '/');
 	getline(asd2, qwe2, '/');
-	input_file_name = qwe1;
+	output_file_name = qwe2;
 
 	string line;
 	ifstream input_file(INPUT_FILE_PATH + input_file_name);
@@ -64,10 +64,10 @@ LevantaDatos::LevantaDatos(string input_file_name, string output_file_name){
 	this->confusion_file_path = INPUT_FILE_PATH + input_file_name + "_matrices_confusion";
 	this->hit_rates_file_path = INPUT_FILE_PATH + input_file_name + "_hit_rates";
 	this->ciclos_de_clock_file_path = INPUT_FILE_PATH + input_file_name + "_ciclos"; 	// el de los ciclos
-	this->autovalores_file_path = INPUT_FILE_PATH + input_file_name + "_autovalores";		// el de los autovectores
-	this->recall_file_path = INPUT_FILE_PATH + input_file_name + "_recall";		// el de los autovectores
-	this->precision_file_path = INPUT_FILE_PATH + input_file_name + "_precision";		// el de los autovectores
-	this->f1_file_path = INPUT_FILE_PATH + input_file_name + "_f1";		// el de los autovectores
+	this->autovalores_file_path = this->output_file_path;								// el de los autovectores
+	this->recall_file_path = INPUT_FILE_PATH + input_file_name + "_recall";				// el de los recalls
+	this->precision_file_path = INPUT_FILE_PATH + input_file_name + "_precision";		// el de las precisiones
+	this->f1_file_path = INPUT_FILE_PATH + input_file_name + "_f1";						// el de los autovectores
 
 
 	// Creo los archivos
