@@ -23,7 +23,7 @@ class Matriz{
 		unsigned int Alto() const;
 		Matriz Transponer() const;
 		double MetodoPotenciaNIteraciones(Vector& x, unsigned int nit) const;
-		double MetodoPotenciaEpsilon(Vector& x, double e) const;
+		double MetodoPotenciaEpsilon(Vector& x, double e,unsigned int iter) const;
 
 		Vector& operator[](unsigned int i);
 		const Vector& operator[](unsigned int i) const;
