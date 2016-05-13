@@ -17,8 +17,9 @@ void imprmirVectorInt(Vector& v){
 	cout << v[v.Dimension()-1] << "]" << endl;
 }
 
-void testearTrainingSet(Identificador& id, LevantaDatos& ld, Matriz& matriz_confusion, Vector& hit_rates, clock_t& clocks_para_fold){
+void testearTrainingSet(Identificador& id, LevantaDatos& ld, Matriz& matriz_confusion, double& hit_rate, clock_t& clocks_para_fold, Vector& precision, Vector& recall){
 	Vector cantidades(10);
+	double cantidad = 0;
 
 	Vector verdaderos_positivos(10);
 	Vector falsos_positivos(10);
@@ -27,6 +28,7 @@ void testearTrainingSet(Identificador& id, LevantaDatos& ld, Matriz& matriz_conf
 	for(unsigned int i = 0; i < ld.LabelsTesting().size(); i++){
 		int label =  ld.LabelsTesting()[i];
 		cantidades[label] ++;
+		cantidad++;
 
 		clock_t begin_reconocimiento = clock();
 		int res = id.kNN(ld.MatrizTesting()[i],ld.CantidadVecinos());
@@ -35,7 +37,7 @@ void testearTrainingSet(Identificador& id, LevantaDatos& ld, Matriz& matriz_conf
 		
 		matriz_confusion[res][label]++;
 		if (res == label){
-			hit_rates[label]++;
+			hit_rate++;
 			verdaderos_positivos[label]++;
 		} else {
 			falsos_positivos[res]++;
@@ -43,28 +45,16 @@ void testearTrainingSet(Identificador& id, LevantaDatos& ld, Matriz& matriz_conf
 		}
 
 	}	
+	cout << "asdaasd " << hit_rate << endl;
+	cout << "asdaasd " << cantidad << endl;
 
-	Vector precision(10);
-	Vector recall(10);
+
+	hit_rate = hit_rate / cantidad;
 
 	for (int i = 0; i < 10; ++i){
-		hit_rates[i] = hit_rates[i] / cantidades[i];
 		precision[i] = verdaderos_positivos[i] / (verdaderos_positivos[i] + falsos_positivos[i]);
 		recall[i] = verdaderos_positivos[i] / (verdaderos_positivos[i] + falsos_negativos[i]);
 	}
-
-	cout << "cantidades" << endl;
-	imprmirVectorInt(cantidades);
-	cout << "verdaderos_positivos" << endl;
-	imprmirVectorInt(verdaderos_positivos);
-	cout << "falsos_negativos" << endl;
-	imprmirVectorInt(falsos_negativos);
-	cout << "falsos_positivos" << endl;
-	imprmirVectorInt(falsos_positivos);
-	cout << "Precision" << endl;
-	imprmirVectorInt(precision);
-	cout << "Recall" << endl;
-	imprmirVectorInt(recall);
 }
 
 void testearKesimoFold(int fold, LevantaDatos& ld, int metodo){
@@ -90,11 +80,13 @@ void testearKesimoFold(int fold, LevantaDatos& ld, int metodo){
 	cout << "\tReconociendo dígitos del fold de testing..." << endl;
 	clock_t clocks_para_reconocimiento_temp = 0;
 	Matriz matriz_confusion(10, 10);
-	Vector hit_rates(10);
-	testearTrainingSet(id, ld, matriz_confusion, hit_rates, clocks_para_reconocimiento_temp);
+	double hit_rate = 0;
+	Vector precision(10);
+	Vector recall(10);
+	testearTrainingSet(id, ld, matriz_confusion, hit_rate, clocks_para_reconocimiento_temp, precision, recall);
 	const int clocks_para_reconocimiento = (const int) clocks_para_reconocimiento_temp;
 
-	ld.EscribirResultados(clocks_para_seteo_cambio_base, clocks_para_reconocimiento, matriz_confusion, hit_rates, id.AutoValores());
+	ld.EscribirResultados(clocks_para_seteo_cambio_base, clocks_para_reconocimiento, matriz_confusion, hit_rate, id.AutoValores(), precision, recall);
 }
 
 void testAlphaPCA(unsigned int fold, LevantaDatos& ld, unsigned int iter, unsigned int subSet){
