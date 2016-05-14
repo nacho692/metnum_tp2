@@ -1,5 +1,4 @@
 #include "modulos/identificador.h"
-#include "modulos/escupe_datos.h"
 #include "modulos/levanta_datos.h"
 #include <chrono>
 #include <ctime>
@@ -126,12 +125,12 @@ void testearFoldVecinos(LevantaDatos& ld, int fold, Vector& vecinos, Vector& alp
 	// metodo 0 = PCA
 	// metodo 1 = PLS
 
-	// cout << "Haciendo magia para el fold " << fold << endl;
+	cout << "Haciendo magia para el fold " << fold << endl;
 
 	for (int k = 0; k < 2; k++){
 		for(int i = 0; i < alphas.Dimension(); i++){	// alpha.dimension == gamma.dimension
-			// if (!k) cout << "\tPreparando identificador para PCA para alpha " << alphas[i] << "..." << endl;
-			// else cout << "\tPreparando identificador para PLS-DA para gamma " << gammas[i] << "..." << endl;
+			if (!k) cout << "\tPreparando identificador para PCA para alpha " << alphas[i] << "..." << endl;
+			else cout << "\tPreparando identificador para PLS-DA para gamma " << gammas[i] << "..." << endl;
 
 			Matriz mt = ld.MatrizTraining();
 			Identificador id(ld.LabelsTraining());
@@ -139,7 +138,7 @@ void testearFoldVecinos(LevantaDatos& ld, int fold, Vector& vecinos, Vector& alp
 			else id.PLS_DA(mt, gammas[i]);
 
 			for(int j = 0; j < vecinos.Dimension(); j++ ){
-				// cout << "\t  Reconociendo dígitos del fold de testing para " << vecinos[j] << " vecinos..." << endl;
+				cout << "\t  Reconociendo dígitos del fold de testing para " << vecinos[j] << " vecinos..." << endl;
 
 				Matriz matriz_confusion(10, 10);
 				double hit_rate = 0;
@@ -147,10 +146,10 @@ void testearFoldVecinos(LevantaDatos& ld, int fold, Vector& vecinos, Vector& alp
 				Vector recall(10);
 
 				testearTrainingSetVecinos(id, ld, vecinos[j], matriz_confusion, hit_rate, precision, recall);
-				// if (!k) cout << "\t  Alpha : " << alphas[i] << endl;
-				// else cout << "\t  Gamma : " << gammas[i] << endl;
-				// cout << "\t  Cantidad de vecinos : " << vecinos[j] << endl;
-				// cout << "\t  Hitrate : " << hit_rate << endl;
+				if (!k) cout << "\t  Alpha : " << alphas[i] << endl;
+				else cout << "\t  Gamma : " << gammas[i] << endl;
+				cout << "\t  Cantidad de vecinos : " << vecinos[j] << endl;
+				cout << "\t  Hitrate : " << hit_rate << endl;
 				if (!k){
 					hit_rates_PCA[i][j][fold] = hit_rate;
 				} else {
@@ -410,7 +409,7 @@ int main(int argc, char const *argv[]){
 	string nombre_salida(argv[2]);
 	string metodo_a_utilizar(argv[3]);
 
-	// cout << "Levantando datos..." << endl;
+	cout << "Levantando datos..." << endl;
 
 	LevantaDatos ld(nombre_entrada, nombre_salida);
 	// testGammaPLS(0,ld,10,20000);
