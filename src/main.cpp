@@ -122,9 +122,11 @@ void testearTrainingSetVecinos(Identificador& id, LevantaDatos& ld, int cantidad
 	}
 }
 
-void testearFoldVecinos(LevantaDatos& ld, int fold, Vector vecinos, Vector alphas, Vector gammas, vector< Matriz > hit_rates_PCA, vector< Matriz > hit_rates_PLS_DA){
+void testearFoldVecinos(LevantaDatos& ld, int fold, Vector& vecinos, Vector& alphas, Vector& gammas, vector< Matriz >& hit_rates_PCA, vector< Matriz >& hit_rates_PLS_DA){
 	// metodo 0 = PCA
 	// metodo 1 = PLS
+
+	// cout << "Haciendo magia para el fold " << fold << endl;
 
 	for (int k = 0; k < 2; k++){
 		for(int i = 0; i < alphas.Dimension(); i++){	// alpha.dimension == gamma.dimension
@@ -323,9 +325,7 @@ void testVecinosSinMetodo(unsigned int fold, LevantaDatos& ld, unsigned int iter
 }
 
 void testVecinos(LevantaDatos& ld){
-	// cout << "Bienvenido al tests de vecinos" << endl;
-
-	// cout << "    Cantidad de folds : " << ld.CantidadFolds() << endl;
+	cout << "Bienvenido al tests de vecinos" << endl;
 
 	Vector alphas;
 	alphas.Agregar(20);
@@ -372,8 +372,6 @@ void testVecinos(LevantaDatos& ld){
 		ld.SetearKesimoFold(i);
 		testearFoldVecinos(ld, i, vecinos, alphas, gammas, hit_rates_PCA, hit_rates_PLS_DA);
 	}
-
-	cout << "Imprimiendo resultados..." << endl;
 
 	for (int i = 0; i < alphas.Dimension(); i++){
 		cout << "Resultado para alpha : " << alphas[i] << endl;
