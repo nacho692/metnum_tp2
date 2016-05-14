@@ -122,14 +122,14 @@ void testearTrainingSetVecinos(Identificador& id, LevantaDatos& ld, int cantidad
 	}
 }
 
-void testearFoldVecinos(LevantaDatos& ld, Vector vecinos, Vector alphas, Vector gammas){
+void testearFoldVecinos(LevantaDatos& ld, int fold, Vector vecinos, Vector alphas, Vector gammas, vector< Matriz > hit_rates_PCA, vector< Matriz > hit_rates_PLS_DA){
 	// metodo 0 = PCA
 	// metodo 1 = PLS
 
 	for (int k = 0; k < 2; k++){
-		for(int i = 0; i < alphas.Dimension(); i++){
-			if (!k) cout << "\tPreparando identificador para PCA para alpha " << alphas[i] << "..." << endl;
-			else cout << "\tPreparando identificador para PLS-DA para gamma " << gammas[i] << "..." << endl;
+		for(int i = 0; i < alphas.Dimension(); i++){	// alpha.dimension == gamma.dimension
+			// if (!k) cout << "\tPreparando identificador para PCA para alpha " << alphas[i] << "..." << endl;
+			// else cout << "\tPreparando identificador para PLS-DA para gamma " << gammas[i] << "..." << endl;
 
 			Matriz mt = ld.MatrizTraining();
 			Identificador id(ld.LabelsTraining());
@@ -137,7 +137,7 @@ void testearFoldVecinos(LevantaDatos& ld, Vector vecinos, Vector alphas, Vector 
 			else id.PLS_DA(mt, gammas[i]);
 
 			for(int j = 0; j < vecinos.Dimension(); j++ ){
-				cout << "\tReconociendo dígitos del fold de testing para " << vecinos[j] << "vecinos..." << endl;
+				// cout << "\t  Reconociendo dígitos del fold de testing para " << vecinos[j] << " vecinos..." << endl;
 
 				Matriz matriz_confusion(10, 10);
 				double hit_rate = 0;
@@ -145,11 +145,27 @@ void testearFoldVecinos(LevantaDatos& ld, Vector vecinos, Vector alphas, Vector 
 				Vector recall(10);
 
 				testearTrainingSetVecinos(id, ld, vecinos[j], matriz_confusion, hit_rate, precision, recall);
-				cout << "Alpha : " << alphas[i] << endl;
-				cout << "Gamma : " << gammas[i] << endl;
-				cout << "Cantidad de vecinos : " << vecinos[j] << endl;
-				cout << "Hitrate : " << hit_rate << endl;
+				// if (!k) cout << "\t  Alpha : " << alphas[i] << endl;
+				// else cout << "\t  Gamma : " << gammas[i] << endl;
+				// cout << "\t  Cantidad de vecinos : " << vecinos[j] << endl;
+				// cout << "\t  Hitrate : " << hit_rate << endl;
+				if (!k){
+					hit_rates_PCA[i][j][fold] = hit_rate;
+				} else {
+					hit_rates_PLS_DA[i][j][fold] = hit_rate;
+				}
+				// cout << "\t  Matriz de confusion : " << matriz_confusion << endl;
+
 			}
+
+			// cout << "\t  Resultados temporales..." << endl;
+			// if (!k){
+			// 	cout << "\t  Resultado para alpha : " << alphas[i] << endl;
+			// 	cout << hit_rates_PCA[i] << endl;
+			// } else {
+			// 	cout << "\t  Resultado para gamma : " << gammas[i] << endl;
+			// 	cout << hit_rates_PLS_DA[i] << endl;
+			// }
 		}
 	}
 }
@@ -307,9 +323,9 @@ void testVecinosSinMetodo(unsigned int fold, LevantaDatos& ld, unsigned int iter
 }
 
 void testVecinos(LevantaDatos& ld){
-	cout << "Bienvenido al tests de vecinos" << endl;
+	// cout << "Bienvenido al tests de vecinos" << endl;
 
-	cout << "    Cantidad de folds : " << ld.CantidadFolds() << endl;
+	// cout << "    Cantidad de folds : " << ld.CantidadFolds() << endl;
 
 	Vector alphas;
 	alphas.Agregar(20);
@@ -340,12 +356,34 @@ void testVecinos(LevantaDatos& ld){
 	vecinos.Agregar(10000);
 	vecinos.Agregar(37000);
 
-	imprmirVectorInt(vecinos);
+	vector< Matriz > hit_rates_PCA;
+	for (int i = 0; i < alphas.Dimension(); i++){
+		Matriz m(ld.CantidadFolds(), vecinos.Dimension());
+		hit_rates_PCA.push_back(m);
+	}
+
+	vector< Matriz > hit_rates_PLS_DA;
+	for (int i = 0; i < alphas.Dimension(); i++){
+		Matriz m(ld.CantidadFolds(), vecinos.Dimension());
+		hit_rates_PLS_DA.push_back(m);
+	}
 
 	for(int i = 0; i < ld.CantidadFolds(); i++){
 		ld.SetearKesimoFold(i);
-		testearFoldVecinos(ld, vecinos, alphas, gammas);
+		testearFoldVecinos(ld, i, vecinos, alphas, gammas, hit_rates_PCA, hit_rates_PLS_DA);
 	}
+
+	cout << "Imprimiendo resultados..." << endl;
+
+	for (int i = 0; i < alphas.Dimension(); i++){
+		cout << "Resultado para alpha : " << alphas[i] << endl;
+		cout << hit_rates_PCA[i] << endl;
+	}
+	for (int i = 0; i < gammas.Dimension(); i++){
+		cout << "Resultado para gamma : " << gammas[i] << endl;
+		cout << hit_rates_PLS_DA[i] << endl;
+	}
+
 }
 
 void testGeneral(LevantaDatos& ld){
@@ -374,7 +412,7 @@ int main(int argc, char const *argv[]){
 	string nombre_salida(argv[2]);
 	string metodo_a_utilizar(argv[3]);
 
-	cout << "Levantando datos..." << endl;
+	// cout << "Levantando datos..." << endl;
 
 	LevantaDatos ld(nombre_entrada, nombre_salida);
 	// testGammaPLS(0,ld,10,20000);
