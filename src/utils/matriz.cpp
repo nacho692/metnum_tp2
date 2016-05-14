@@ -129,12 +129,12 @@ double Matriz::MetodoPotenciaNIteraciones(Vector& x, unsigned int nit) const{
 	return a;
 }
 
-double Matriz::MetodoPotenciaEpsilon(Vector& x, double e) const{
+double Matriz::MetodoPotenciaEpsilon(Vector& x, double e, unsigned int iter) const{
 	double a;
 	Matriz B = Matriz(*this);
 	Vector xNuevo = (B*x);
 	xNuevo = xNuevo * (1/xNuevo.Norma());
-	for (unsigned int i = 1 ; x.Distancia(xNuevo) > e ; i++ ){
+	for (unsigned int i = 1 ; x.Distancia(xNuevo) > e && i < iter; i++ ){
 		x = xNuevo;
 		xNuevo = B*x;
 		xNuevo = xNuevo*(1/((xNuevo).Norma()));

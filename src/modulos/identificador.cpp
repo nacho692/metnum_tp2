@@ -32,7 +32,7 @@ void Identificador::PCA(const Matriz& set, unsigned int alpha){
 	this->autovalores = Vector(alpha);
 	for(unsigned int i = 0; i < alpha; i++){
 		autovector.RandomVector();
-		autovalor =  mCovarianza.MetodoPotenciaNIteraciones( autovector, 10);
+		autovalor =  mCovarianza.MetodoPotenciaEpsilon(autovector,0.00003,100);
 		this->autovalores[i] = autovalor;
 		this->Vt[i] = autovector;
 		mDeflacion = Matriz( autovector, autovector *autovalor );
@@ -67,7 +67,7 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 
 		Vector w = Vector( M.Ancho() );
 		w.RandomVector();
-		this->autovalores[i] = M.MetodoPotenciaNIteraciones(w,10);
+		this->autovalores[i] = M.MetodoPotenciaEpsilon(w,0.00003,100);
 
 		w = w * (1/w.Norma());
 		Vt[i] = w;
