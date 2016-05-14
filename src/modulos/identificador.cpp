@@ -8,16 +8,9 @@ Identificador::Identificador( vector<int> clases){
 }
 
 void Identificador::SinMetodo(const Matriz& set){
-	Matriz X,Xt;
-	CentrarDividir(set,X,Xt);
-	this->tSet = X;
+	this->tSet = set;
 	//Cambio de base es identidad, queda todo
-	this->Vt = Matriz(X.Ancho(),X.Ancho());
-	for(unsigned int i = 0; i < Vt.Alto(); i++){
-		for(unsigned int j = 0; j < Vt.Ancho(); j++){
-			this->Vt[i][j] = (i==j);
-		}
-	}
+	Vt.Identidad(true);
 }
 
 void Identificador::PCA(const Matriz& set, unsigned int alpha){
@@ -123,10 +116,14 @@ const Vector& Identificador::AutoValores() const{
 
 int Identificador::kNN(const Vector& v, unsigned int kVecinos) const{
 
-	Vector vb = (v - this->medias)*(1/sqrt(tSet.Alto()-1));
+	
 	//Cambio de base
-	vb = Vt*vb;
-	vb.Resize(Vt.Alto());
+	Vector vb = v;
+	if(!Vt.Identidad()){
+		Vector vb = (vb - this->medias)*(1/sqrt(tSet.Alto()-1));
+		vb = Vt*vb;
+		vb.Resize(Vt.Alto());
+	}
 	
 	vector<Vecino> distancias;
 	for(unsigned int i = 0; i < tSet.Alto(); i++){

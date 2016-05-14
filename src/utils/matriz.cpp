@@ -29,18 +29,6 @@ Matriz::Matriz(unsigned int ancho, unsigned int alto){
 	Vector v = Vector(ancho);
 	m = vector< Vector >(alto, v);
 }
-/*
-
-Matriz::Matriz(const vector<Digito>& set){
-	for(unsigned int i = 0; i < set.size(); i++){
-		Vector f;
-		for(unsigned int j = 0; j < set[i].Dimension(); j++){
-			f.Agregar(set[i][j]);
-		}
-		m.push_back(f);
-	}
-}
-*/
 
 Matriz::Matriz(const Matriz& otra){
 	m = vector<Vector>(otra.m);
@@ -144,6 +132,14 @@ double Matriz::MetodoPotenciaEpsilon(Vector& x, double e, unsigned int iter) con
 	return a;
 }
 
+bool Matriz::Identidad() const{
+	return this->identidad;
+}
+
+void Matriz::Identidad(bool esIdent){
+	this->identidad = esIdent;
+	return;
+}
 
 Vector& Matriz::operator[](unsigned int i){
 	return m[i];
