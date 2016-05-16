@@ -52,9 +52,10 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 
 	for(unsigned int i = 0; i < Y.Alto(); i++){
 		for(unsigned int j = 0; j < Y.Ancho(); j++){
-			Y[i][j] = -1;
+			Y[i][j] = -1/sqrt(set.Alto()-1);
 		}
-		Y[i][Clases()[i]] = 1;
+		Y[i][Clases()[i]] = 1/sqrt(set.Alto()-1);
+		Y[i] = Y[i] - medias;
 	}
 	Matriz Yt = Y.Transponer();
 
