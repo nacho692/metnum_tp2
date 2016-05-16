@@ -8,22 +8,22 @@ Identificador::Identificador( vector<int> clases){
 }
 
 void Identificador::SinMetodo(const Matriz& set){
-	Matriz X,Xt;
-	CentrarDividir(set,X,Xt);
-	this->tSet = X;
+	this->tSet = set;
 	//Cambio de base es identidad, queda todo
-	this->Vt = Matriz(X.Ancho(),X.Ancho());
+	this->Vt = Matriz(set.Ancho(),set.Ancho());
 	for(unsigned int i = 0; i < Vt.Alto(); i++){
 		for(unsigned int j = 0; j < Vt.Ancho(); j++){
 			this->Vt[i][j] = (i==j);
 		}
 	}
+	this->Vt.Identidad(true);
 }
 
 void Identificador::PCA(const Matriz& set, unsigned int alpha){
-	Matriz X,Xt;
-	
-	CentrarDividir(set,X,Xt);
+	Matriz X = set;
+	this->medias = CentrarDividir(X);
+	Matriz Xt = set.Transponer();
+
 	Matriz mCovarianza = Xt*X;
 	Vector autovector = Vector( set.Ancho() );
 	Matriz mDeflacion;
@@ -45,8 +45,9 @@ void Identificador::PCA(const Matriz& set, unsigned int alpha){
 }
 
 void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
-	Matriz X,Xt;
-	CentrarDividir(set,X,Xt);
+	Matriz X = set;
+	this->medias = CentrarDividir(X);
+	Matriz Xt = set.Transponer();
 
 	Matriz Y(10,set.Alto());
 
@@ -57,6 +58,8 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 		Y[i][Clases()[i]] = 1/sqrt(set.Alto()-1);
 		Y[i] = Y[i] - medias;
 	}
+
+	CentrarDividir(Y);
 	Matriz Yt = Y.Transponer();
 
 	this->Vt = Matriz(set.Ancho(), gamma);
@@ -89,16 +92,15 @@ void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 }
 
 
-void Identificador::CentrarDividir(const Matriz& set, Matriz& X, Matriz& Xt){
+Vector Identificador::CentrarDividir(Matriz& X) const{
 	//Esto es igual en ambos metodos
-	Xt = set.Transponer();
-	double escalar = 1 / sqrt( set.Alto()-1 );
-	this->medias = Vector(Xt.Alto());
+	Matriz Xt = X.Transponer();
+	double escalar = 1 / sqrt( X.Alto()-1 );
+	Vector med = Vector(Xt.Alto());
 
 	for(unsigned int i = 0; i < Xt.Alto(); i++){
-		//TODO: Vector + escalar
 		double media = Xt[i].Media();
-		this->medias[i] = media;
+		med[i] = media;
 		for(unsigned int j = 0; j < Xt.Ancho(); j++){
 			Xt[i][j] -= media;
 			Xt[i][j] *= escalar;
@@ -106,6 +108,7 @@ void Identificador::CentrarDividir(const Matriz& set, Matriz& X, Matriz& Xt){
 	}
 
 	X = Xt.Transponer();
+	return med;
 }
 
 const Matriz& Identificador::cambioBase() const{
@@ -124,10 +127,12 @@ const Vector& Identificador::AutoValores() const{
 
 int Identificador::kNN(const Vector& v, unsigned int kVecinos) const{
 
-	Vector vb = (v - this->medias)*(1/sqrt(tSet.Alto()-1));
 	//Cambio de base
-	vb = Vt*vb;
-	vb.Resize(Vt.Alto());
+	Vector vb = v;
+	if(!this->Vt.Identidad())
+		vb = (v - this->medias)*(1/sqrt(tSet.Alto()-1));
+		vb = Vt*vb;
+		vb.Resize(Vt.Alto());
 	
 	vector<Vecino> distancias;
 	for(unsigned int i = 0; i < tSet.Alto(); i++){
@@ -168,14 +173,10 @@ int Identificador::kNN(const Vector& v, unsigned int kVecinos) const{
 
 	return maxD;
 }
-/*
-unsigned int Identificador::Alpha()const{
-	return this->alpha;
-}
-unsigned int Identificador::Gamma()const{
-	return this->gamma;
-}*/
+
+
 
 const vector<int>& Identificador::Clases()const{
 	return this->clases;
 }
+

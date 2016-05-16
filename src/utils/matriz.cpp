@@ -29,18 +29,12 @@ Matriz::Matriz(unsigned int ancho, unsigned int alto){
 	Vector v = Vector(ancho);
 	m = vector< Vector >(alto, v);
 }
-/*
-
-Matriz::Matriz(const vector<Digito>& set){
-	for(unsigned int i = 0; i < set.size(); i++){
-		Vector f;
-		for(unsigned int j = 0; j < set[i].Dimension(); j++){
-			f.Agregar(set[i][j]);
-		}
-		m.push_back(f);
-	}
+bool Matriz::Identidad()const{
+	return this->identidad;
 }
-*/
+void Matriz::Identidad(bool id){
+	this->identidad = id;
+}
 
 Matriz::Matriz(const Matriz& otra){
 	m = vector<Vector>(otra.m);

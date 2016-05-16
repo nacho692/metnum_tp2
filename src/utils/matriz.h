@@ -13,6 +13,7 @@ class Matriz{
 		vector<Vector> m;
 		unsigned int ancho;
 		unsigned int alto;
+		bool identidad = false;
 	public:
 		Matriz();
 		Matriz(unsigned int ancho, unsigned int alto);
@@ -24,6 +25,8 @@ class Matriz{
 		Matriz Transponer() const;
 		double MetodoPotenciaNIteraciones(Vector& x, unsigned int nit) const;
 		double MetodoPotenciaEpsilon(Vector& x, double e,unsigned int iter) const;
+		bool Identidad() const;
+		void Identidad(bool id);
 
 		Vector& operator[](unsigned int i);
 		const Vector& operator[](unsigned int i) const;
