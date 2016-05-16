@@ -22,7 +22,7 @@ void Identificador::SinMetodo(const Matriz& set){
 void Identificador::PCA(const Matriz& set, unsigned int alpha){
 	Matriz X = set;
 	this->medias = CentrarDividir(X);
-	Matriz Xt = set.Transponer();
+	Matriz Xt = X.Transponer();
 
 	Matriz mCovarianza = Xt*X;
 	Vector autovector = Vector( set.Ancho() );
@@ -47,16 +47,15 @@ void Identificador::PCA(const Matriz& set, unsigned int alpha){
 void Identificador::PLS_DA(const Matriz& set, unsigned int gamma ){
 	Matriz X = set;
 	this->medias = CentrarDividir(X);
-	Matriz Xt = set.Transponer();
+	Matriz Xt = X.Transponer();
 
 	Matriz Y(10,set.Alto());
 
 	for(unsigned int i = 0; i < Y.Alto(); i++){
 		for(unsigned int j = 0; j < Y.Ancho(); j++){
-			Y[i][j] = -1/sqrt(set.Alto()-1);
+			Y[i][j] = -1;
 		}
-		Y[i][Clases()[i]] = 1/sqrt(set.Alto()-1);
-		Y[i] = Y[i] - medias;
+		Y[i][Clases()[i]] = 1;
 	}
 
 	CentrarDividir(Y);

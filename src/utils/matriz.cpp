@@ -11,7 +11,7 @@ Vector operator*(const Vector& v, const Matriz& B){
 
 
 Matriz::Matriz(){
-	
+	this->identidad = false;
 }
 Matriz::Matriz(const Vector& v1, const Vector& v2){
 	(*this) = Matriz(v2.Dimension(),v1.Dimension());
@@ -21,9 +21,11 @@ Matriz::Matriz(const Vector& v1, const Vector& v2){
 			m[i][j] = v1[i]*v2[j];
 		}
 	}
+	this->identidad = false;
 }
 
 Matriz::Matriz(unsigned int ancho, unsigned int alto){
+	this->identidad = false;
 	this->ancho = ancho;
 	this->alto = alto;
 	Vector v = Vector(ancho);
@@ -40,6 +42,7 @@ Matriz::Matriz(const Matriz& otra){
 	m = vector<Vector>(otra.m);
 	this->ancho = otra.ancho;
 	this->alto = otra.alto;
+	this->identidad = otra.identidad;
 }
 
 unsigned int Matriz::Ancho() const{
