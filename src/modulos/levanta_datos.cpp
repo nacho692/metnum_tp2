@@ -30,6 +30,7 @@ LevantaDatos::LevantaDatos(string input_file_name, string output_file_name){
 		iss << line;
 		getline(iss, token,' ');
 		this->input_file_path = token + "train.csv";
+		this->kaggle_file_path = token + "test.csv";
 		getline(iss, token,' ');
 		this->cantidad_vecinos = (unsigned int) stoi(token);
 		getline(iss, token,' ');
@@ -101,7 +102,9 @@ LevantaDatos::LevantaDatos(string input_file_name, string output_file_name){
 	digitos_training = Matriz(784, cantidad_training);
 	labels_training.resize(cantidad_training);
 
-	// Levantar d´igitos
+	digitos_testing_kaggle = Matriz(784, 28000);
+
+	// Levantar d´igitos training
 
 	string linea;
 	ifstream data_file(this->FilePath());
@@ -130,6 +133,34 @@ LevantaDatos::LevantaDatos(string input_file_name, string output_file_name){
 		}
 
 		data_file.close();
+	} else {
+		cout << "No se abre la data" << endl;
+	}
+
+	// Levantar dígitos testing
+	string linea_testing;
+	ifstream testing_data_file(this->kaggle_file_path);
+
+	if (testing_data_file.is_open()){
+		getline(testing_data_file, linea_testing);
+		int  i = 0;
+		while ( getline(testing_data_file, linea_testing) ){
+			stringstream data_line;
+			string pixel;
+
+			data_line << linea_testing;
+
+			unsigned int j = 0;
+			while ( getline(data_line, pixel, ',') ){
+				this->digitos_testing_kaggle[i][j] = (double) stoi(pixel);
+				j++;
+			}
+
+			i++;
+			data_line.clear();
+		}
+
+		testing_data_file.close();
 	} else {
 		cout << "No se abre la data" << endl;
 	}
@@ -216,6 +247,12 @@ unsigned int LevantaDatos::Gamma() const{
 unsigned int LevantaDatos::CantidadFolds() const{
 	return this->cantidad_folds;
 }
+const Matriz& LevantaDatos::Digitos() const{
+	return this->digitos;
+}
+const vector<int>& LevantaDatos::Labels() const{
+	return this->labels;
+}
 const Matriz& LevantaDatos::MatrizTraining() const{
 	return this->digitos_training;
 }
@@ -227,4 +264,7 @@ const Matriz& LevantaDatos::MatrizTesting() const{
 }
 const vector<int>& LevantaDatos::LabelsTesting() const{
 	return this->labels_testing;
+}
+const Matriz& LevantaDatos::MatrizKaggle() const{
+	return this->digitos_testing_kaggle;
 }

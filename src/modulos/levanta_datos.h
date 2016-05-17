@@ -23,6 +23,8 @@ class LevantaDatos{
 		string precision_file_path;
 		string f1_file_path;
 
+		string kaggle_file_path;
+
 		unsigned int cantidad_vecinos;
 		unsigned int alpha;
 		unsigned int gamma;
@@ -38,6 +40,8 @@ class LevantaDatos{
 		Matriz digitos_training;
 		vector<int> labels_training;
 
+		Matriz digitos_testing_kaggle;
+
 	public:
 		LevantaDatos(string input_file_name,string output_file_name);
 		void SetearKesimoFold(unsigned int k);
@@ -49,11 +53,16 @@ class LevantaDatos{
 		unsigned int Gamma() const;
 		unsigned int CantidadFolds() const;
 
+		const Matriz& Digitos() const;
+		const vector<int>& Labels() const;
+
 		const Matriz& MatrizTraining() const;
 		const vector<int>& LabelsTraining() const;
 
 		const Matriz& MatrizTesting() const;
 		const vector<int>& LabelsTesting() const;
+
+		const Matriz& MatrizKaggle() const;
 };
 
 #endif
