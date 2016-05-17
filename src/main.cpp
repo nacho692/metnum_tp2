@@ -380,18 +380,34 @@ void testingKaggle(LevantaDatos& ld, string& metodo){
 	unsigned int vecinos = 4;
 
 	cout << "Seteando identificador..." << endl;
+	cout << "Vecinos : " << alpha;
 
-	if (metodo == "0") id.SinMetodo(mt);
-	else if (metodo == "1") id.PCA(mt, alpha);
-	else id.PLS_DA(mt, gamma);
-
+	if (metodo == "0") {
+		cout << "Sin método" << endl;
+		id.SinMetodo(mt);
+	} else {
+		if (metodo == "1"){
+			cout << "Con PCA" << endl;
+			cout << "Alpha : " << alpha << endl; 
+			id.PCA(mt, alpha);	
+		} else {
+			cout << "Con PLS" << endl;
+			cout << "Gamma : " << gamma << endl;
+			id.PLS_DA(mt, gamma);
+		}
+	}
 	cout << "Identificando dígitos..." << endl;
 
-	cout << "ImageId,Label" << endl;
-	for (int i = 0; i < mt.Alto(); i++){
-		int res = id.kNN(mt[i], vecinos);
-		cout << i+1 << "," << res << endl;
+	ofstream ofs;
+	ofs.open(ld.KaggleOutFilePath(), std::ofstream::out | std::ofstream::app);
+
+	ofs << "ImageId,Label" << endl;
+	for (int i = 0; i < ld.MatrizKaggle().Alto(); i++){
+		int res = id.kNN(ld.MatrizKaggle()[i], vecinos);
+		ofs << i+1 << "," << res << endl;
 	}
+
+	ofs.close();
 }
 
 int main(int argc, char const *argv[]){ 

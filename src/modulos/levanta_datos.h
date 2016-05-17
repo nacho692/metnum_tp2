@@ -23,7 +23,9 @@ class LevantaDatos{
 		string precision_file_path;
 		string f1_file_path;
 
-		string kaggle_file_path;
+		string kaggle_in_file_path;
+		string kaggle_out_file_path;
+
 
 		unsigned int cantidad_vecinos;
 		unsigned int alpha;
@@ -48,6 +50,7 @@ class LevantaDatos{
 		void EscribirResultados(const int clocks_para_seteo_cambio_base, const int clocks_para_reconocimiento, const Matriz& matriz_confusion, const double& hit_rate, const Vector& autovalores, const Vector& precision, const Vector& recall);
 
 		string FilePath() const;
+		string KaggleOutFilePath() const;
 		unsigned int CantidadVecinos() const;
 		unsigned int Alpha() const;
 		unsigned int Gamma() const;

@@ -30,7 +30,7 @@ LevantaDatos::LevantaDatos(string input_file_name, string output_file_name){
 		iss << line;
 		getline(iss, token,' ');
 		this->input_file_path = token + "train.csv";
-		this->kaggle_file_path = token + "test.csv";
+		this->kaggle_in_file_path = token + "test.csv";
 		getline(iss, token,' ');
 		this->cantidad_vecinos = (unsigned int) stoi(token);
 		getline(iss, token,' ');
@@ -70,6 +70,8 @@ LevantaDatos::LevantaDatos(string input_file_name, string output_file_name){
 	this->precision_file_path = INPUT_FILE_PATH + input_file_name + "_precision";		// el de las precisiones
 	this->f1_file_path = INPUT_FILE_PATH + input_file_name + "_f1";						// el de los autovectores
 
+	this->kaggle_out_file_path = INPUT_FILE_PATH + output_file_name + ".csv";
+
 
 	// Creo los archivos
 	ofstream ofs;
@@ -87,6 +89,9 @@ LevantaDatos::LevantaDatos(string input_file_name, string output_file_name){
 	ofs.close();
 
 	ofs.open(this->autovalores_file_path, std::ofstream::out | std::ofstream::trunc);
+	ofs.close();
+
+	ofs.open(this->kaggle_out_file_path, std::ofstream::out | std::ofstream::trunc);
 	ofs.close();
 
 
@@ -139,7 +144,7 @@ LevantaDatos::LevantaDatos(string input_file_name, string output_file_name){
 
 	// Levantar dígitos testing
 	string linea_testing;
-	ifstream testing_data_file(this->kaggle_file_path);
+	ifstream testing_data_file(this->kaggle_in_file_path);
 
 	if (testing_data_file.is_open()){
 		getline(testing_data_file, linea_testing);
@@ -234,6 +239,10 @@ string LevantaDatos::FilePath() const{
 	return this->input_file_path;
 }
 
+string LevantaDatos::KaggleOutFilePath() const{
+	return this->kaggle_out_file_path;
+}
+
 unsigned int LevantaDatos::CantidadVecinos() const{
 	return this->cantidad_vecinos;
 }
@@ -241,30 +250,39 @@ unsigned int LevantaDatos::CantidadVecinos() const{
 unsigned int LevantaDatos::Alpha() const{
 	return this->alpha;
 }
+
 unsigned int LevantaDatos::Gamma() const{
 	return this->gamma;
 }
+
 unsigned int LevantaDatos::CantidadFolds() const{
 	return this->cantidad_folds;
 }
+
 const Matriz& LevantaDatos::Digitos() const{
 	return this->digitos;
 }
+
 const vector<int>& LevantaDatos::Labels() const{
 	return this->labels;
 }
+
 const Matriz& LevantaDatos::MatrizTraining() const{
 	return this->digitos_training;
 }
+
 const vector<int>& LevantaDatos::LabelsTraining() const{
 	return this->labels_training;
 }
+
 const Matriz& LevantaDatos::MatrizTesting() const{
 	return this->digitos_testing;
 }
+
 const vector<int>& LevantaDatos::LabelsTesting() const{
 	return this->labels_testing;
 }
+
 const Matriz& LevantaDatos::MatrizKaggle() const{
 	return this->digitos_testing_kaggle;
 }
