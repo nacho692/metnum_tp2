@@ -25,6 +25,7 @@ valoresPCA10k = np.array([[6787, 6713, 6707, 6710, 6732, 6706, 6698, 6696, 6693,
 						[25989, 26486, 26490, 26474, 26478, 26479, 26504, 26467, 26501, 26454],
 						[27861, 27513, 27530, 27509, 27528, 27509, 27526, 27511, 27523, 27513]]
 )
+
 valoresPCA20k = np.array([[13090, 13058, 13057, 13057, 13056, 13057, 13057, 13057, 13056, 13057],
 						[14917, 14911, 14910, 14908, 14913, 14911, 14911, 14912, 14913, 14911],
 						[16835, 16790, 16802, 16656, 16615, 16601, 16594, 16596, 16595, 16595],
@@ -40,6 +41,23 @@ valoresPCA20k = np.array([[13090, 13058, 13057, 13057, 13056, 13057, 13057, 1305
 						[35357, 35391, 35377, 35364, 35374, 35372, 35387, 35375, 35384, 35356],
 						[37285, 37353, 37335, 37332, 37332, 37348, 37335, 37330, 37305, 37351],
 						[39132, 39066, 39048, 39050, 39042, 39043, 39043, 39044, 39045, 39044]]
+)
+
+valoresPLS10k = np.array([[837, 837, 830, 832, 836, 829, 834, 835, 830, 836], 
+						[26519, 26762, 26833, 27028, 27224, 25330, 25144, 25511, 25532, 24952], 
+						[51438, 55977, 54634, 54195, 54289, 53087, 53090, 53112, 53199, 53111], 
+						[79772, 75170, 75400, 75350, 75275, 75203, 75370, 75377, 75065, 75105], 
+						[100486, 99575, 99706, 99771, 99822, 99645, 99758, 99752, 99505, 99764], 
+						[124120, 122504, 122442, 122489, 122447, 122450, 122355, 122465, 122165, 122713], 
+						[146861, 147977, 147324, 147515, 147613, 147391, 147746, 147504, 147509, 147570], 
+						[171222, 169289, 168668, 168824, 168700, 169003, 168882, 168823, 168798, 168836], 
+						[192951, 192286, 192223, 192166, 192526, 192729, 192243, 192266, 192315, 191972], 
+						[215791, 215035, 215729, 215174, 215665, 215373, 215351, 215078, 215392, 215642], 
+						[239188, 241438, 241918, 242204, 241902, 242122, 241473, 242084, 242352, 242201], 
+						[266253, 267550, 266511, 267015, 267597, 267136, 267120, 267010, 266845, 267471], 
+						[292541, 291169, 291175, 291304, 291423, 291402, 291246, 291715, 291423, 292000], 
+						[314920, 313765, 313417, 313782, 313965, 313630, 315066, 313786, 314659, 315092], 
+						[338966, 329021, 329942, 330297, 330221, 329580, 330352, 330563, 329938, 330514], ]
 )
 valoresPLS20k = np.array([[1656, 1624, 1624, 1624, 1624, 1623, 1624, 1624, 1624, 1624], 
 						[48606, 48321, 44703, 42613, 42588, 42584, 42583, 42586, 42598, 42635], 
@@ -60,9 +78,11 @@ valoresPLS20k = np.array([[1656, 1624, 1624, 1624, 1624, 1623, 1624, 1624, 1624,
 
 devilPCA10k = np.empty(np.shape(alphas)[0])
 devilPCA20k = np.empty(np.shape(alphas)[0])
+devilPLS10k = np.empty(np.shape(alphas)[0])
 devilPLS20k = np.empty(np.shape(alphas)[0])
 meanPCA10k = np.empty(np.shape(alphas)[0])
 meanPCA20k = np.empty(np.shape(alphas)[0])	
+meanPLS10k = np.empty(np.shape(alphas)[0])
 meanPLS20k = np.empty(np.shape(alphas)[0])
 for i in range(0,len(valoresPCA10k)):
 	devilPCA10k[i] = np.std(valoresPCA10k[i])
@@ -70,6 +90,8 @@ for i in range(0,len(valoresPCA10k)):
 	devilPCA20k[i] = np.std(valoresPCA20k[i])
 	meanPCA20k[i] = np.mean(valoresPCA20k[i])
 
+	devilPLS10k[i] = np.std(valoresPLS10k[i])
+	meanPLS10k[i] = np.mean(valoresPLS10k[i])
 	devilPLS20k[i] = np.std(valoresPLS20k[i])
 	meanPLS20k[i] = np.mean(valoresPLS20k[i])
 
@@ -77,10 +99,11 @@ fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.set_xlabel("Alphas/Gammas", fontsize = 16)
 ax.set_ylabel("Tiempo (Milisegundos)", fontsize = 16)
-ax.errorbar(alphas, meanPCA10k, yerr=devilPCA10k, color = "r", label='PCA (10k)')
+ax.errorbar(alphas, meanPCA10k, yerr=devilPCA10k, color = "limegreen", label='PCA (10k)')
 ax.errorbar(alphas, meanPCA20k, yerr=devilPCA20k, color = "g", label='PCA (20k)')
+ax.errorbar(alphas, meanPLS10k, yerr=devilPLS10k, color = "deepskyblue", label='PLS (10k)')
 ax.errorbar(alphas, meanPLS20k, yerr=devilPLS20k, color = "b", label='PLS (20k)')
 pylab.legend(loc='upper left')
-plt.title('Hiperparametrizacion', fontsize = 18)
+plt.title('Comparacion de tiempos:', fontsize = 18)
 
 plt.show()

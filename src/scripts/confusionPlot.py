@@ -6,6 +6,7 @@ import matplotlib.patheffects as path_effects
 
 
 def plotConf(df_confusion,titulo,savefile):
+  plt.ioff()
   fig = plt.figure()
   plt.clf()
   ax = fig.add_subplot(111)
