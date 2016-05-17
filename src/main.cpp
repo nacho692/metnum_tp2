@@ -6,7 +6,7 @@
 using namespace std::chrono;
 using namespace std;
 
-void imprmirVectorInt(Vector& v){
+void imprmirVectorInt(const Vector& v){
 	cout << "[";
 
 	for (int i = 0; i < v.Dimension()-1; i++){
@@ -132,27 +132,12 @@ void testearFoldVecinos(LevantaDatos& ld, int fold, Vector& vecinos, Vector& alp
 				Vector recall(10);
 
 				testearTrainingSetVecinos(id, ld, vecinos[j], matriz_confusion, hit_rate, precision, recall);
-				// if (!k) cout << "\t  Alpha : " << alphas[i] << endl;
-				// else cout << "\t  Gamma : " << gammas[i] << endl;
-				// cout << "\t  Cantidad de vecinos : " << vecinos[j] << endl;
-				// cout << "\t  Hitrate : " << hit_rate << endl;
 				if (!k){
 					hit_rates_PCA[i][j][fold] = hit_rate;
 				} else {
 					hit_rates_PLS_DA[i][j][fold] = hit_rate;
 				}
-				// cout << "\t  Matriz de confusion : " << matriz_confusion << endl;
-
 			}
-
-			// cout << "\t  Resultados temporales..." << endl;
-			// if (!k){
-			// 	cout << "\t  Resultado para alpha : " << alphas[i] << endl;
-			// 	cout << hit_rates_PCA[i] << endl;
-			// } else {
-			// 	cout << "\t  Resultado para gamma : " << gammas[i] << endl;
-			// 	cout << hit_rates_PLS_DA[i] << endl;
-			// }
 		}
 	}
 }
@@ -385,6 +370,30 @@ void testGeneral(LevantaDatos& ld){
 	}	
 }
 
+void testingKaggle(LevantaDatos& ld, string& metodo){
+
+	Matriz mt = ld.Digitos();
+	Identificador id(ld.Labels());
+
+	unsigned int alpha = 20;
+	unsigned int gamma = 15;
+	unsigned int vecinos = 4;
+
+	cout << "Seteando identificador..." << endl;
+
+	if (metodo == "0") id.SinMetodo(mt);
+	else if (metodo == "1") id.PCA(mt, alpha);
+	else id.PLS_DA(mt, gamma);
+
+	cout << "Identificando dígitos..." << endl;
+
+	cout << "ImageId,Label" << endl;
+	for (int i = 0; i < mt.Alto(); i++){
+		int res = id.kNN(mt[i], vecinos);
+		cout << i+1 << "," << res << endl;
+	}
+}
+
 int main(int argc, char const *argv[]){ 
 	/* argv
 	nombre_entrada
@@ -401,15 +410,16 @@ int main(int argc, char const *argv[]){
 	// cout << "    Cantidad vecinos : " << ld.CantidadVecinos() << endl;
 	// cout << "    Alpha : " << ld.Alpha() << endl;
 	// cout << "    Gamma : " << ld.Gamma() << endl;
-	cout << "    Cantidad fold : " << ld.CantidadFolds() << endl;
+	// cout << "    Cantidad fold : " << ld.CantidadFolds() << endl;
 	// testGammaPLS(0,ld,10,20000);
 	// testAlphaPCA(0,ld,10,20000);
 	// testVecinosPLS(0,ld,10,20000);
 	// testVecinosPCA(0,ld,10,20000);
 	// testVecinosSinMetodo(0,ld,10,20000);
 	// testGeneral(ld);
+	// testVecinos(ld);
 
-	testVecinos(ld);
+	testingKaggle(ld, metodo_a_utilizar);
 
 	return 0;
 }
