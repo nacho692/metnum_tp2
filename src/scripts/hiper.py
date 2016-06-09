@@ -63,9 +63,11 @@ def paramTest(K,tSet = 42000, seed = 0):
 	alphas = np.random.choice(range(1,100), 60)
 	gammas = np.random.choice(range(1,50), 60)
 	# vecinos = np.random.choice(range(1,tSet/K), 60)
-	vecinos = np.random.choice(range(1,50), 60)
-	gammas[0] = 5
-	gammas[1] = 6
+	vecinos = [4,1000]
+	gammas[0] = 15
+	gammas[1] = 15
+	alphas[0] = 20
+	alphas[1] = 20
 	hitsPCA = []
 	hitsPLS = []
 	for i in range(0,2):

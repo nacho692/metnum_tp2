@@ -375,12 +375,30 @@ void testingKaggle(LevantaDatos& ld, string& metodo){
 	Matriz mt = ld.Digitos();
 	Identificador id(ld.Labels());
 
-	unsigned int alpha = 20;
-	unsigned int gamma = 15;
+	/*
+	 | Parámetros óptimos:
+	 |
+	 |	Fold 3:
+	 |		Alpha 	= 48
+	 |		Gamma 	= 44
+	 |		Vecinos =  4
+	 |
+	 |	Fold 10:
+	 |		Alpha 	= 33
+	 |		Gamma 	= 44
+	 |		Vecinos =  4
+	 |	
+	 |	*Para ambos folds PCA nos dió (casi nulamente) mejores resultados
+	 |
+	*/
+
+
+	unsigned int alpha = 48;
+	unsigned int gamma = 44;
 	unsigned int vecinos = 4;
 
 	cout << "Seteando identificador..." << endl;
-	cout << "Vecinos : " << alpha;
+	cout << "Vecinos : " << vecinos << endl;
 
 	if (metodo == "0") {
 		cout << "Sin método" << endl;
@@ -432,7 +450,7 @@ int main(int argc, char const *argv[]){
 	// testVecinosPLS(0,ld,10,20000);
 	// testVecinosPCA(0,ld,10,20000);
 	// testVecinosSinMetodo(0,ld,10,20000);
-	// testGeneral(ld);
+	testGeneral(ld);
 	// testVecinos(ld);
 
 	testingKaggle(ld, metodo_a_utilizar);
